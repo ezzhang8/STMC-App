@@ -82,7 +82,7 @@ struct CalendarEvent: Identifiable, Hashable {
 }
 
 private class CalendarEvents: ObservableObject {
-    @Published var events = [[CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent]()]
+    @Published var events = [[CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent]()]
     
     // The months that the calendar events span
     @Published var months = [String]()
@@ -103,25 +103,29 @@ private class CalendarEvents: ObservableObject {
                 var endDate = item["start"]["date"].string
                 let startDateTime = item["start"]["dateTime"].string
                 let endDateTime = item["end"]["dateTime"].string
-                let month = self.formatMonth(dateString: startDate)
                 
-                if self.months.last != month && startDate != nil{
-                    DispatchQueue.main.async {
-                        self.months.append(month!)
-                    }
-                }
+                
                 if startDate == nil && startDateTime != nil {
                     startDate = String(startDateTime!.prefix(10))
                     endDate = String(endDateTime!.prefix(10))
                 }
-                
-                if !summary.hasPrefix("Day 1") && !summary.hasPrefix("Day 2") && !summary.hasPrefix("Staff") && !summary.hasPrefix("Mass") && !summary.hasPrefix("Academic Assembly"){
+                let month = self.formatMonth(dateString: startDate)
+
+                if self.months.last != month && startDate != nil{
+                    DispatchQueue.main.sync {
+                        self.months.append(month!)
+                    }
+                }
+                if !summary.hasPrefix("MORE - ") && !summary.hasPrefix("RICE - ") 	{
                     DispatchQueue.main.sync {
                         if self.events.indices.contains(self.months.count-1) {
                             self.events[self.months.count-1].append(CalendarEvent(id: id, summary: summary, startDate: startDate!, endDate: endDate!, startTime: startDateTime, endTime: endDateTime, description: description, htmlLink: htmlLink))
                         }
                     }
                 }
+                
+                print(self.events);
+                print(self.months);
             }
         })
     }

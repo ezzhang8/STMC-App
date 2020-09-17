@@ -41,21 +41,18 @@ struct HouseDetails: View {
                     Text(String(house.points)+" pts.")
                         .font(.headline)
                     
-                    Picker(selection:$selectorIndex, label: Text("Picker")) {
-                        Text("Advisories").tag(0)
-                        Text("Points").tag(1)
-                    }
-                    .padding(.horizontal, 25)
-                    .padding(.vertical)
-                    .pickerStyle(SegmentedPickerStyle())
+                    //Picker(selection:$selectorIndex, label: Text("Picker")) {
+                        //Text("Advisories").tag(0)
+                       // Text("Points").tag(0)
+                    //}
+                    //.padding(.horizontal, 25)
+                    //.padding(.vertical)
+                    //.pickerStyle(SegmentedPickerStyle())
                     
                     
-                    if (selectorIndex == 0) {
-                        AdvisoriesView(idHouse: house.id)
-                    }
-                    else {
+                 
                         PointsView(idHouse: house.id)
-                    }
+                    
                 }
             }
             .padding(.top, 50)

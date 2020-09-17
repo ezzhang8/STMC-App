@@ -10,9 +10,9 @@ import SwiftUI
 
 struct ScheduleCard: View {
     var schedule: Schedule
-    
+    var seniority: String
     var body: some View {
-        NavigationLink(destination: ScheduleDetails(schedule: schedule)) {
+        NavigationLink(destination: ScheduleDetails(schedule: schedule, seniority: seniority)) {
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 15)
                     .frame(height: 75)
@@ -27,11 +27,13 @@ struct ScheduleCard: View {
                                 .foregroundColor(Color.white)
                                 .padding(.leading)
                             
-                            Text(schedule.scheduleType)
+                            Text("\(schedule.scheduleType) (\(schedule.scheduleFamily))")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(Color.white)
                                 .padding(.leading)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                         }
                         Spacer()
                         VStack(alignment: .center, spacing: -5.0) {
@@ -76,8 +78,7 @@ func formatDay(dayString: String) -> String {
 private func colorMatch(scheduleType: String) -> Color {
     let colorDict = [
         "Regular Schedule": Color.SPAD,
-        "Academic Assembly Schedule": Color.ACAS,
-        "Late Start": Color.LTST,
+        "CLE/CLC/Staff Meeting Schedule": Color.ACAS,
         "Mass Schedule": Color.MASS,
         "Modified Schedule": Color.MODF
     ]
@@ -91,8 +92,4 @@ private func colorMatch(scheduleType: String) -> Color {
 }
 
 
-struct ScheduleCard_Previews: PreviewProvider {
-    static var previews: some View {
-        ScheduleCard(schedule: Schedule(id: "", summary: "", dotw: "", startDate: "", scheduleType: ""))
-    }
-}
+

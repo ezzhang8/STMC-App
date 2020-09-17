@@ -10,8 +10,9 @@ import SwiftUI
 import SwiftyJSON
 
 struct ScheduleTab: View {
+    @EnvironmentObject var userStatus: Profile
     @State var showingCalendar = false
-    @ObservedObject fileprivate var ScheduleArray = Schedules()
+    @ObservedObject private var ScheduleArray = Schedules()
     
     var body: some View {
         NavigationView {
@@ -26,12 +27,15 @@ struct ScheduleTab: View {
                             Text("Next")
                                 .font(.title3)
                                 .fontWeight(.bold)
-                                
+
                         }
                         .padding(.leading)
                     ){
-                        ScheduleCard(schedule: ScheduleArray.today)
-                        .padding(.bottom)
+                        ForEach(Array(ScheduleArray.data.enumerated()), id: \.element) { index, schedule in
+                            if index == 0 {
+                                ScheduleCard(schedule: schedule, seniority: determineSeniority(userStatus: userStatus))
+                            }
+                        }
                 }
                 .padding(.top, 2.0)
                 Divider()
@@ -43,15 +47,17 @@ struct ScheduleTab: View {
                         Text("Upcoming")
                             .font(.title3)
                             .fontWeight(.bold)
+                        Spacer()
                             
                     }
                     .padding(.leading)
                 ){
-                    VStack {
+                    VStack (alignment: .leading) {
                         ForEach(Array(ScheduleArray.data.enumerated()), id: \.element) { index, schedule in
                             if index > 0 {
-                                ScheduleCard(schedule: schedule)
+                                ScheduleCard(schedule: schedule, seniority: determineSeniority(userStatus: userStatus))
                             }
+                            
                         }
                         Spacer()
                     }
@@ -81,7 +87,6 @@ struct ScheduleTab: View {
 
 private class Schedules: ObservableObject {
     @Published var data = [Schedule]()
-    @Published var today = Schedule(id: "", summary: "", dotw: "", startDate: "", scheduleType: "")
     
     var scheduleData = [Schedule]()
     init() {
@@ -92,57 +97,48 @@ private class Schedules: ObservableObject {
                 let summary = item["summary"].stringValue
                 let id = item["id"].stringValue
                 let startDate = item["start"]["date"].string
-                var dotw: String
                 
-                if startDate != nil && summary.hasPrefix("Day 1") || summary.hasPrefix("Day 2") {
-                    dotw = dayFromDateString(dateString: startDate!)
+                
+                if startDate != nil && summary.hasPrefix("MORE - ") || summary.hasPrefix("RICE - ") {
+                    var dotw: String
                     
-                
-                    self.scheduleData.append(Schedule(id: id, summary: String(summary.suffix(4)), dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule"))
+                    let scheduleComponents = summary.components(separatedBy: " - ")
+                    dotw = self.dayFromDateString(dateString: startDate!)
                     
-                }
-            }
-            for item in items {
-                var summary = item["summary"].stringValue
-                var startDate = item["start"]["date"].string
-                let startDateTime = item["start"]["dateTime"].string
-                
-                if startDate == nil && startDateTime != nil {
-                    startDate = String(startDateTime!.prefix(10))
-                }
-                
-                if summary.hasPrefix("Mass Schedule") || summary.hasPrefix("Academic Assembly") || summary.hasPrefix("Staff/PLC")  {
-                    
-                    if summary.hasPrefix("Staff/PLC") {
-                        summary = "Late Start"
+                    if scheduleComponents.count > 2 {
+                        self.scheduleData.append(Schedule(id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: scheduleComponents[2], scheduleFamily: scheduleComponents[0]))
                     }
-                    
-                    for (index, day) in self.scheduleData.enumerated() {
-                        if day.startDate == String(startDate!) {
-                            self.scheduleData[index].scheduleType = summary
-                            break
-                        }
+                    else {
+                        self.scheduleData.append(Schedule(id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule", scheduleFamily: scheduleComponents[0]))
                     }
                 }
             }
             DispatchQueue.main.async {
-                self.today = self.scheduleData[0]
+               // self.today = self.scheduleData[0]
                 self.data = self.scheduleData
             }
         })
     }
+    private func dayFromDateString(dateString: String) -> String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en-US")
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let date = dateFormatter.date(from: dateString)
+        
+        let components = dateFormatter.weekdaySymbols?[Calendar.current.component(.weekday, from: date!)-1]
+        
+        return String(components?.prefix(3) ?? "Error")
+    }
 }
 
-private func dayFromDateString(dateString: String) -> String{
-    let dateFormatter = DateFormatter()
-    dateFormatter.locale = Locale(identifier: "en-US")
-    dateFormatter.dateFormat = "yyyy-MM-dd"
-    
-    let date = dateFormatter.date(from: dateString)
-    
-    let components = dateFormatter.weekdaySymbols?[Calendar.current.component(.weekday, from: date!)-1]
-    
-    return String(components?.prefix(3) ?? "Error")
+private func determineSeniority(userStatus: Profile) -> String {
+    if (userStatus.user?.profile.email.contains("2021") == true ||
+        userStatus.user?.profile.email.contains("2022") == true ||
+        userStatus.user?.profile.email.contains("2023") == true) {
+        return "SR"
+    }
+    return "JR"
 }
 
 struct Schedule: Identifiable, Hashable {
@@ -151,6 +147,7 @@ struct Schedule: Identifiable, Hashable {
     var dotw: String
     var startDate: String
     var scheduleType: String
+    var scheduleFamily: String
 }
 
 struct ScheduleTab_Previews: PreviewProvider {

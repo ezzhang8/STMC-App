@@ -29,11 +29,18 @@ struct WidgetView: View {
                     Image("STMC")
                         .resizable()
                         .frame(width: 30, height: 30)
-                    Text(data.widgetData[0].dotw)
-                        .font(.headline)
-                        .foregroundColor(.white)
+                    VStack {
+                        Text(data.widgetData[0].dotw)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                       Text(data.widgetData[0].scheduleFamily)
+                            .font(.caption)
+                            .foregroundColor(.white)
+                            .italic()
+                        
+                    }
+                    
                 }
-                
                 Text(formatDate(dateString: data.widgetData[0].startDate))
                     .font(.subheadline)
                     .fontWeight(.semibold)
@@ -43,20 +50,19 @@ struct WidgetView: View {
                     .fontWeight(.heavy)
                     .foregroundColor(.white)
                     .shadow(radius: 2)
-                Text(data.widgetData[0].scheduleType)
+                Text(String("\(data.widgetData[0].scheduleType)"))
                     .font(.footnote)
                     .foregroundColor(.white)
+                    .lineLimit(1)
             }
+            .padding(.horizontal, 20)
         }
-       
-        
     }
 }
 
-
 struct Provider: TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping(Model)-> Void) {
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular", scheduleFamily: "RICE")])
         completion(loadingData)
     }
     func placeholder(in context: Context) -> Model {
@@ -64,7 +70,7 @@ struct Provider: TimelineProvider {
             // inital snapshot....
             // or loading type content....
             
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular", scheduleFamily: "RICE")])
             
             return loadingData
     }
@@ -79,39 +85,22 @@ struct Provider: TimelineProvider {
                 let summary = item["summary"].stringValue
                 let id = item["id"].stringValue
                 let startDate = item["start"]["date"].string
-                var dotw: String
                 
-                if startDate != nil && summary.hasPrefix("Day 1") || summary.hasPrefix("Day 2") {
+                
+                if startDate != nil && summary.hasPrefix("MORE - ") || summary.hasPrefix("RICE - ") {
+                    var dotw: String
+                    
+                    var scheduleComponents = summary.components(separatedBy: " - ")
                     dotw = dayFromDateString(dateString: startDate!)
                     
-                
-                    scheduleData.append(Schedule(date: date, id: id, summary: String(summary.suffix(4)), dotw: dotw, startDate: startDate!, scheduleType: "Regular"))
-                    
-                }
-            }
-            for item in items {
-                var summary = item["summary"].stringValue
-                var startDate = item["start"]["date"].string
-                let startDateTime = item["start"]["dateTime"].string
-                
-                if startDate == nil && startDateTime != nil {
-                    startDate = String(startDateTime!.prefix(10))
-                }
-                
-                if summary.hasPrefix("Mass Schedule") || summary.hasPrefix("Academic Assembly") || summary.hasPrefix("Staff/PLC")  {
-                    
-                    if summary.hasPrefix("Staff/PLC") {
-                        summary = "Late Start"
-                    }
-                    else if summary.hasPrefix("Academic Assembly") {
-                        summary = "Academic Assembly"
-                    }
-                    
-                    for (index, day) in scheduleData.enumerated() {
-                        if day.startDate == String(startDate!) {
-                            scheduleData[index].scheduleType = summary
-                            break
+                    if scheduleComponents.count > 2 {
+                        if scheduleComponents[2] == "CLE/CLC/Staff Meeting Schedule" {
+                           // scheduleComponents[2] = "Mass Schedule"
                         }
+                        scheduleData.append(Schedule(date: date, id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: scheduleComponents[2], scheduleFamily: scheduleComponents[0]))
+                    }
+                    else {
+                        scheduleData.append(Schedule(date: date, id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule", scheduleFamily: scheduleComponents[0]))
                     }
                 }
             }
@@ -185,4 +174,5 @@ struct Schedule: Identifiable, Hashable, TimelineEntry {
     var dotw: String
     var startDate: String
     var scheduleType: String
+    var scheduleFamily: String
 }

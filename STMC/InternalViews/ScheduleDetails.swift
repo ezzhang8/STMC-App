@@ -11,10 +11,12 @@ import SwiftyJSON
 
 struct ScheduleDetails: View {
     var schedule: Schedule
+    var seniority: String
     @ObservedObject fileprivate var CalendarEvents: CalendarEvents
     
-    init(schedule: Schedule) {
+    init(schedule: Schedule, seniority: String) {
         self.schedule = schedule
+        self.seniority = seniority
         self.CalendarEvents = STMC.CalendarEvents(dateString: schedule.startDate)
     }
     
@@ -33,7 +35,7 @@ struct ScheduleDetails: View {
                 HStack(alignment: .center) {
                     Spacer()
                     VStack {
-                        Text(determineDay(blockSchedule: schedule.summary))
+                        Text(determineDay(blockSchedule: schedule.summary) + " - " + schedule.scheduleFamily)
                             .font(.headline)
                             .padding(.top)
                         Text(schedule.summary)
@@ -55,7 +57,7 @@ struct ScheduleDetails: View {
                         .textCase(.none)
                 }
             ){
-                ForEach(generateSchedule(scheduleType: schedule.scheduleType, blocks: schedule.summary)!, id: \.self) { i in
+                ForEach(generateSchedule(scheduleType: String("\(schedule.scheduleType) \(seniority)"), blocks: schedule.summary)!, id: \.self) { i in
                     HStack {
                         Text(i[0])
                             .fontWeight(.semibold)
@@ -75,13 +77,12 @@ struct ScheduleDetails: View {
                             .textCase(.none)
                     }
                 ){
-                    HStack {
                         ForEach(CalendarEvents.events, id: \.self) { event in
                             NavigationLink(destination: CalendarDetails(CalendarEvent: event!)) {
                                 Text(event!.summary)
                             }
                         }
-                    }
+                    
                 }
             }
             
@@ -143,14 +144,12 @@ private class CalendarEvents: ObservableObject {
                     startDate = String(startDateTime!.prefix(10))
                     endDate = String(endDateTime!.prefix(10))
                 }
-                
-                if startDate == self.dateString && !summary.hasPrefix("Day 1") &&  !summary.hasPrefix("Day 2") && !summary.hasPrefix("Staff") && !summary.hasPrefix("Mass") && !summary.hasPrefix("Academic Assembly") {
-                    DispatchQueue.main.async {
+                if startDate == self.dateString {
+                    DispatchQueue.main.sync {
                         self.events.append(CalendarEvent(id: id, summary: summary, startDate: startDate!, endDate: endDate!, startTime: startDateTime, endTime: endDateTime, description: description, htmlLink: htmlLink))
                     }
                 }
             }
-            
             if self.events.count < 1 {
                 DispatchQueue.main.async {
                     self.events.append(nil)
@@ -173,48 +172,79 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
     let blockArray = Array(blocks)
     var scheduleArray = Dictionary<String, Any>()
     
-    scheduleArray["Regular Schedule"] = [
-        ["Morning X Block", "7:00-8:15"],
-        ["Block \(blockArray[0])", "8:25-9:40"],
-        ["Block \(blockArray[1])", "9:45-11:00"],
-        ["Break", "11:00-11:15"],
+    scheduleArray["Regular Schedule SR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["Warning Bell", "8:20"],
+        ["Block \(blockArray[0])", "8:25-9:45"],
+        ["Block \(blockArray[1])", "9:50-11:05"],
+        ["Sr. School Break", "11:05-11:15"],
         ["Block \(blockArray[2])", "11:20-12:35"],
-        ["Lunch", "12:35-1:20"],
-        ["Block \(blockArray[3])", "1:25-2:40"],
-        ["Afternoon Y Block", "2:45-4:00"]
+        ["Lunch", "12:35-1:10"],
+        ["Block \(blockArray[3])", "1:15-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
     ]
-    scheduleArray["Late Start"] = [
-        ["Morning X Block", "7:00-8:15"],
-        ["Staff Meeting/PLC", "8:15-9:10"],
-        ["Block \(blockArray[0])", "9:20-10:25"],
-        ["Block \(blockArray[1])", "10:30-11:35"],
-        ["Lunch", "11:35-12:20"],
-        ["Block \(blockArray[2])", "12:25-1:30"],
-        ["Block \(blockArray[3])", "1:35-2:40"],
-        ["Afternoon Y Block", "2:45-4:00"]
+    scheduleArray["Regular Schedule JR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["Warning Bell", "8:20"],
+        ["Block \(blockArray[0])", "8:25-9:45"],
+        ["Jr. School Break", "9:45-9:55"],
+        ["Block \(blockArray[1])", "10:00-11:15"],
+        ["Lunch", "11;15-11:50"],
+        ["Block \(blockArray[2])", "11:55-1:10"],
+        ["Block \(blockArray[3])", "1:15-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
     ]
-    scheduleArray["Academic Assembly Schedule"] = [
-        ["Morning X Block", "7:00-8:15"],
-        ["Block \(blockArray[0])", "8:25-9:25"],
-        ["Block \(blockArray[1])", "9:30-10:30"],
-        ["Break", "10:30-10:45"],
-        ["Block \(blockArray[2])", "10:50-11:50"],
-        ["Lunch", "11:50-12:40"],
-        ["A/A Block", "12:45-1:35"],
-        ["Block \(blockArray[3])", "1:40-2:40"],
-        ["Afternoon Y Block", "2:45-4:00"]
+    scheduleArray["CLE/CLC/Staff Meeting Schedule SR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["Staff Meeting/PLC", "8:20-9:05"],
+        ["Warning Bell", "9:10"],
+        ["Block \(blockArray[0])", "9:15-10:00"],
+        ["Block \(blockArray[1])", "10:05-10:50"],
+        ["Block \(blockArray[2])", "10:55-11:40"],
+        ["Sr. School Lunch", "11:40-12:10"],
+        ["CE 10-12", "12:15-12:55"],
+        ["Block \(blockArray[3])", "12:55-1:40"],
+        ["COMPASS/FLEX Time", "1:45-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
     ]
-    scheduleArray["Mass Schedule"] = [
-        ["Morning X Block", "7:00-8:15"],
-        ["Block \(blockArray[0])", "8:25-9:25"],
-        ["Break", "9:25-9:35"],
-        ["Block \(blockArray[1])", "9:40-10:40"],
-        ["Mass", "10:45-11:45"],
-        ["Lunch", "11:45-12:30"],
-        ["Block \(blockArray[2])", "12:35-1:35"],
-        ["Block \(blockArray[3])", "1:40-2:40"],
-        ["Afternoon Y Block", "2:45-4:00"]
+    scheduleArray["CLE/CLC/Staff Meeting Schedule JR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["Staff Meeting/PLC", "8:20-9:05"],
+        ["Warning Bell", "9:10"],
+        ["Block \(blockArray[0])", "9:15-10:00"],
+        ["Block \(blockArray[1])", "10:05-10:50"],
+        ["Jr. School Lunch", "10:50-11:20"],
+        ["Block \(blockArray[2])", "11:25-12:10"],
+        ["CE 8/9", "12:15-12:55"],
+        ["Block \(blockArray[3])", "12:55-1:40"],
+        ["COMPASS/FLEX Time", "1:45-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
     ]
+    
+    scheduleArray["Mass Schedule SR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["Warning Bell", "8:20"],
+        ["Block \(blockArray[0])", "8:25-9:35"],
+        ["Block \(blockArray[1])", "8:40-10:45"],
+        ["Sr. School Break", "10:45-10:55"],
+        ["Block \(blockArray[2])", "11:00-12:05"],
+        ["Sr. School Lunch", "12:05-12:40"],
+        ["Block \(blockArray[3]) & Mass", "12:45-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
+    ]
+    
+    scheduleArray["Mass Schedule JR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["Warning Bell", "8:20"],
+        ["Block \(blockArray[0])", "8:25-9:35"],
+        ["Jr. School Break", "9:35-9:45"],
+        ["Block \(blockArray[1])", "9:50-10:55"],
+        ["Jr. School Lunch", "10:55-11:30"],
+        ["Block \(blockArray[2])", "11:35-12:40"],
+        ["Block \(blockArray[3]) & Mass", "12:45-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
+    ]
+    
     
     if scheduleArray[scheduleType] != nil {
         return scheduleArray[scheduleType] as? [[String]]
@@ -224,8 +254,4 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
     }
 }
 
-struct ScheduleDetails_Previews: PreviewProvider {
-    static var previews: some View {
-        ScheduleDetails(schedule: Schedule(id: "", summary: "", dotw: "", startDate: "", scheduleType: ""))
-    }
-}
+
