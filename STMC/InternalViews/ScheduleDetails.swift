@@ -125,6 +125,16 @@ private class CalendarEvents: ObservableObject {
         self.dateString = dateString
         
         sendRequest(url: API.calendar, completion: { json in
+            let error = json["error"].string
+
+            if error != nil {
+                DispatchQueue.main.async {
+                    if let cachedData = UserDefaults.standard.data(forKey: "ScheduleDetailsCalendarFor"+dateString) {
+                        self.events = try! PropertyListDecoder().decode([CalendarEvent].self, from: cachedData)
+                    }
+                }
+                return
+            }
             let items = json["items"].array!
             
             for item in items {
@@ -154,6 +164,10 @@ private class CalendarEvents: ObservableObject {
                 DispatchQueue.main.async {
                     self.events.append(nil)
                 }
+            }
+            
+            if let cachedArray = try? PropertyListEncoder().encode(self.events) {
+                UserDefaults.standard.set(cachedArray, forKey: "ScheduleDetailsCalendarFor"+dateString)
             }
         })
     }
@@ -225,7 +239,7 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
         ["Morning X Blocks", "7:00-8:15"],
         ["Warning Bell", "8:20"],
         ["Block \(blockArray[0])", "8:25-9:35"],
-        ["Block \(blockArray[1])", "8:40-10:45"],
+        ["Block \(blockArray[1])", "9:40-10:45"],
         ["Sr. School Break", "10:45-10:55"],
         ["Block \(blockArray[2])", "11:00-12:05"],
         ["Sr. School Lunch", "12:05-12:40"],

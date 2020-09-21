@@ -24,7 +24,9 @@ func sendRequest(url: String, completion: @escaping(JSON)->()) {
     let session = URLSession.shared
     session.dataTask(with: url) { (data, response, error) in
         if error != nil{
-            print((error?.localizedDescription)!)
+            let errorJSON = JSON.init(parseJSON: String("{ \"error\": \"\((error?.localizedDescription)!)\" }"))
+            print((error?.localizedDescription)! as String)
+            completion(errorJSON)
             return
         }
         let json = try! JSON(data: data!)

@@ -33,7 +33,7 @@ struct HouseDetails: View {
                 VStack(alignment: .center) {
                     Image(house.houseName)
                         .resizable()
-                        .frame(width: 112, height: 128)
+                        .frame(width: 256, height: 256)
                         .shadow(radius: 8)
                     Text(house.houseName)
                         .font(.system(size: 35, weight: .bold))
@@ -98,18 +98,8 @@ struct PointsView: View {
     var body: some View {
         VStack {
             ForEach(points.data, id: \.self) { i in
-                if i.action == "No points" {
-                    Text("No points to display")
-                        .fontWeight(.bold)
-                        .padding(.all)
-                        .font(.title)
-                }
-                else {
-                    PointsCard(points: i.points, date: i.date, action: i.action)
-
-                }
+                PointsCard(points: i.points, date: i.date, action: i.action)
             }
-            
         }
     }
 }
@@ -120,7 +110,7 @@ private struct Advisory: Identifiable, Hashable {
     var teachers: String
 }
 
-private struct PointEntry: Hashable {
+private struct PointEntry: Hashable, Codable {
     var action: String
     var date: String
     var points: Int
@@ -131,26 +121,35 @@ private class Points: ObservableObject {
     
     init(idHouse: Int) {
         sendRequest(url: String(API.url+"points/"+String(idHouse)), completion: { json in
+            let error = json["error"].string
+
+            if error != nil {
+                DispatchQueue.main.async {
+                    if let cachedData = UserDefaults.standard.data(forKey: "PointsData"+String(idHouse)) {
+                        self.data = try! PropertyListDecoder().decode([PointEntry].self, from: cachedData)
+                    }
+                }
+                return
+            }
             let pointEntries = json.array!.reversed()
             
-            if pointEntries.count == 0  {
-                DispatchQueue.main.async {
-                    self.data.append(PointEntry(action: "No points", date: "2020-01-01", points: 0))
-                }
-            }
-            
-            
+            var pointContainer = [PointEntry]()
             for entry in pointEntries {
                 let date = entry["date"].stringValue.prefix(10)
                 let action = entry["action"].stringValue
                 let points = entry["points"].intValue
                 
-                DispatchQueue.main.async {
-                    self.data.append(PointEntry(action: action, date: String(date), points: points))
-                }
+                pointContainer.append(PointEntry(action: action, date: String(date), points: points))
+                
+                
 
             }
-            
+            DispatchQueue.main.async {
+                self.data = pointContainer
+                if let cachedArray = try? PropertyListEncoder().encode(pointContainer) {
+                    UserDefaults.standard.set(cachedArray, forKey: "PointsData"+String(idHouse))
+                }
+            }
         })
     }
 }

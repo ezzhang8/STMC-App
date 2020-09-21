@@ -87,10 +87,20 @@ struct ScheduleTab: View {
 
 private class Schedules: ObservableObject {
     @Published var data = [Schedule]()
-    
+
     var scheduleData = [Schedule]()
     init() {
         sendRequest(url: API.calendar, completion: { json in
+            let error = json["error"].string
+
+            if error != nil {
+                DispatchQueue.main.async {
+                    if let cachedData = UserDefaults.standard.data(forKey: "ScheduleData") {
+                        self.data = try! PropertyListDecoder().decode([Schedule].self, from: cachedData)
+                    }
+                }
+                return
+            }
             let items = json["items"].array!
             
             for item in items {
@@ -114,11 +124,15 @@ private class Schedules: ObservableObject {
                 }
             }
             DispatchQueue.main.async {
-               // self.today = self.scheduleData[0]
+                if let cachedArray = try? PropertyListEncoder().encode(self.scheduleData) {
+                    UserDefaults.standard.set(cachedArray, forKey: "ScheduleData")
+                }
                 self.data = self.scheduleData
             }
+            
         })
-    }
+        
+}
     private func dayFromDateString(dateString: String) -> String{
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en-US")
@@ -141,7 +155,7 @@ private func determineSeniority(userStatus: Profile) -> String {
     return "JR"
 }
 
-struct Schedule: Identifiable, Hashable {
+struct Schedule: Identifiable, Hashable, Codable {
     var id: String
     var summary: String
     var dotw: String

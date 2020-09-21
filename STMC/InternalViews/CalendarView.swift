@@ -44,25 +44,28 @@ struct CalendarList: View {
                             .fontWeight(.bold)
                             .textCase(.none)
                 }){
-                    ForEach(self.Calendar.events[index], id: \.self) { event in
-                        NavigationLink(destination: CalendarDetails(CalendarEvent: event)) {
-                            HStack {
-                                ZStack {
-                                    Rectangle()
-                                        .foregroundColor(.white)
-                                        .frame(width:20, height:20)
-                                        .cornerRadius(10)
-                                    Image(systemName: "\(formatDay(dayString: event.startDate)).circle.fill")
-                                        .resizable()
-                                        .foregroundColor(.STMC)
-                                        .frame(width:20, height:20)
-                                        .scaledToFit()
+                    if self.Calendar.events.count > 0 {
+                        ForEach(self.Calendar.events[index], id: \.self) { event in
+                            NavigationLink(destination: CalendarDetails(CalendarEvent: event)) {
+                                HStack {
+                                    ZStack {
+                                        Rectangle()
+                                            .foregroundColor(.white)
+                                            .frame(width:20, height:20)
+                                            .cornerRadius(10)
+                                        Image(systemName: "\(formatDay(dayString: event.startDate)).circle.fill")
+                                            .resizable()
+                                            .foregroundColor(.STMC)
+                                            .frame(width:20, height:20)
+                                            .scaledToFit()
 
+                                    }
+                                    Text(event.summary)
                                 }
-                                Text(event.summary)
                             }
                         }
                     }
+                    
                 }
             }
         }
@@ -70,7 +73,7 @@ struct CalendarList: View {
     }
 }
 
-struct CalendarEvent: Identifiable, Hashable {
+struct CalendarEvent: Identifiable, Hashable, Codable {
     var id: String
     var summary: String
     var startDate: String
@@ -82,15 +85,26 @@ struct CalendarEvent: Identifiable, Hashable {
 }
 
 private class CalendarEvents: ObservableObject {
-    @Published var events = [[CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent]()]
+    @Published var events = [[CalendarEvent]]()
     
     // The months that the calendar events span
     @Published var months = [String]()
     
     init() {
+        if self.cacheDate() {
+            self.loadEventsFromCache()
+            return
+        }
         sendRequest(url: API.calendar, completion: {json in
-            let items = json["items"].array!
+            let error = json["error"].string
             
+            if error != nil  {
+                self.loadEventsFromCache()
+                return
+            }
+            let items = json["items"].array!
+            var monthsContainer = [String]()
+            var eventsContainer = [[CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent](), [CalendarEvent]()]
             for item in items {
                 // General event information
                 let id = item["id"].stringValue
@@ -111,25 +125,69 @@ private class CalendarEvents: ObservableObject {
                 }
                 let month = self.formatMonth(dateString: startDate)
 
-                if self.months.last != month && startDate != nil{
-                    DispatchQueue.main.sync {
-                        self.months.append(month!)
-                    }
+                if monthsContainer.last != month && startDate != nil{
+                    monthsContainer.append(month!)
+                    
                 }
                 if !summary.hasPrefix("MORE - ") && !summary.hasPrefix("RICE - ") 	{
-                    DispatchQueue.main.sync {
-                        if self.events.indices.contains(self.months.count-1) {
-                            self.events[self.months.count-1].append(CalendarEvent(id: id, summary: summary, startDate: startDate!, endDate: endDate!, startTime: startDateTime, endTime: endDateTime, description: description, htmlLink: htmlLink))
-                        }
-                    }
+                    eventsContainer[monthsContainer.count-1].append(CalendarEvent(id: id, summary: summary, startDate: startDate!, endDate: endDate!, startTime: startDateTime, endTime: endDateTime, description: description, htmlLink: htmlLink))
                 }
                 
-                print(self.events);
-                print(self.months);
+            
             }
+            
+            DispatchQueue.main.async {
+                self.months = monthsContainer
+                self.events = eventsContainer
+                
+            }
+            
+            if let cachedArray = try? PropertyListEncoder().encode(eventsContainer) {
+                UserDefaults.standard.set(cachedArray, forKey: "CalendarEvents")
+            }
+            if let cachedMonths = try? PropertyListEncoder().encode(monthsContainer) {
+                UserDefaults.standard.set(cachedMonths, forKey: "CalendarMonths")
+            }
+            
+            self.setCacheDate()
+            
         })
     }
+    private func setCacheDate() {
+        let date = Date()
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+        
+        UserDefaults.standard.set("\(month)-\(day)", forKey: "CalendarCacheDate")
+
+        
+    }
     
+    private func loadEventsFromCache() {
+        DispatchQueue.main.async {
+            if let cachedData = UserDefaults.standard.data(forKey: "CalendarEvents") {
+                self.events = try! PropertyListDecoder().decode([[CalendarEvent]].self, from: cachedData)
+            }
+            if let cachedMonths = UserDefaults.standard.data(forKey: "CalendarMonths") {
+                self.months = try! PropertyListDecoder().decode([String].self, from: cachedMonths)
+            }
+        }
+    }
+    private func cacheDate() -> Bool {
+        let date = Date()
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+        
+        if let cachedData = UserDefaults.standard.object(forKey: "CalendarCacheDate") as? String {
+            if cachedData == "\(month)-\(day)" {
+                
+                return true
+            }
+        }
+        return false
+    }
     
     
     // Takes a date string in the format yyyy-mm-dd and returns the month associated with the date string as a word.

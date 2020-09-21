@@ -40,11 +40,14 @@ struct UserInfoView: View {
                         
                 ){
                     VStack (alignment: .leading){
-                        Text("STMC App")
+                        Text("STMC App for iOS")
                             .font(.headline)
                             .fontWeight(.bold)
                         Text("Developed by Eric Zhang ('22)")
-                        Text("Special thanks to Philip Stachura ('19), for his work with the Google Calendar API")
+                        Text("House crests designed by Charlotte Cho ('21)")
+                            .font(.caption)
+                            .padding(.top, 5)
+                        Text("Special thanks to Philip Stachura ('19)")
                             .font(.caption)
                             .padding(.top, 5)
                     }

@@ -63,9 +63,14 @@ struct ExploreTab: View {
                     ) {
                         ScrollView (.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
-                                ForEach(bulletins.bulletinData, id: \.self) { bulletin in
-                                    BulletinCard(bulletin: bulletin)
+                                if bulletins.bulletinData.count == 0 {
+                                    Text("No bulletins to display")
+                                } else {
+                                    ForEach(bulletins.bulletinData, id: \.self) { bulletin in
+                                        BulletinCard(bulletin: bulletin)
+                                    }
                                 }
+                               
 
                             }
                             .padding([.horizontal, .bottom])
@@ -122,7 +127,7 @@ struct ExploreTab: View {
 }
 
 
-struct House : Identifiable, Hashable {
+struct House : Identifiable, Hashable, Codable {
     var id: Int
     var houseName: String
     var points: Int
@@ -142,21 +147,41 @@ private class Houses: ObservableObject {
     
     init() {
         sendRequest(url: String(API.url+"houses/"), completion: { json in
-            
+            let error = json["error"].string
+
+            if error != nil {
+                DispatchQueue.main.async {
+                    if let cachedData = UserDefaults.standard.data(forKey: "HouseData") {
+                        self.houseData = try! PropertyListDecoder().decode([House].self, from: cachedData)
+                    }
+                }
+                return
+            }
             let houseStandings = json.array!
+            
+            var houseContainer = [House]()
             
             for house in houseStandings {
                 let houseId = house["houseId"].intValue
                 let houseName = house["houseName"].stringValue
                 let points = house["points"].intValue
                 
-                DispatchQueue.main.async {
-                    self.houseData.append(House(id: houseId, houseName: houseName, points: points))
-                    self.houseData.sort {
-                        $0.points > $1.points
-                    }
+                houseContainer.append(House(id: houseId, houseName: houseName, points: points))
+                houseContainer.sort {
+                    $0.points > $1.points
+                }
+
+                
+            }
+            
+            DispatchQueue.main.async {
+                self.houseData = houseContainer
+                if let cachedArray = try? PropertyListEncoder().encode(houseContainer) {
+                    UserDefaults.standard.set(cachedArray, forKey: "HouseData")
                 }
             }
+            
+          
         })
     }
 }
@@ -166,6 +191,11 @@ private class Bulletins: ObservableObject {
     
     init() {
         sendRequest(url: String(API.url+"bulletin/"), completion: { json in
+            let error = json["error"].string
+
+            if error != nil {
+                return
+            }
             let bulletins = json.array!
             
             for bulletin in bulletins {

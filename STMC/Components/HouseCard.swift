@@ -24,22 +24,22 @@ struct HouseCard: View {
                      Spacer()
                     Image(house.houseName)
                          .resizable()
-                         .frame(width: 56, height: 64)
+                         .frame(width: 128, height: 128)
                          .shadow(radius: 8)
-                     Spacer()
-                     VStack {
-                        Text(house.houseName)
-                             .font(.headline)
-                             .fontWeight(.bold)
-                             .foregroundColor(Color.white)
-                             .multilineTextAlignment(.center)
-                             .lineLimit(14)
-                             .frame(width: 125)
+                    VStack {
+//                        Text(house.houseName)
+//                             .font(.headline)
+//                             .fontWeight(.bold)
+//                             .foregroundColor(Color.white)
+//                             .multilineTextAlignment(.center)
+//                             .lineLimit(14)
+//                             .frame(width: 125)
 
                         Text(String(house.points) + " pts.")
                              .font(.subheadline)
                              .fontWeight(.semibold)
                              .foregroundColor(Color.yellow)
+                            .padding(.bottom)
                          
                      }
                      .frame(width: 175)

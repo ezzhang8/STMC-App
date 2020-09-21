@@ -62,7 +62,7 @@ struct WidgetView: View {
 
 struct Provider: TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping(Model)-> Void) {
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular", scheduleFamily: "RICE")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
         completion(loadingData)
     }
     func placeholder(in context: Context) -> Model {
@@ -70,16 +70,27 @@ struct Provider: TimelineProvider {
             // inital snapshot....
             // or loading type content....
             
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular", scheduleFamily: "RICE")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
             
             return loadingData
     }
     func getTimeline(in context: Context, completion: @escaping(Timeline<Model>) -> Void) {
         sendRequest(url: API.calendar, completion: { json in
+            let error = json["error"].string
+            var scheduleData = [Schedule]()
+
+            if error != nil {
+                DispatchQueue.main.async {
+                    if let cachedData = UserDefaults.standard.data(forKey: "WidgetData") {
+                        scheduleData = try! PropertyListDecoder().decode([Schedule].self, from: cachedData)
+                    }
+                }
+                return
+            }
+            
             let date = Date()
             
             let items = json["items"].array!
-            var scheduleData = [Schedule]()
             
             for item in items {
                 let summary = item["summary"].stringValue
@@ -90,19 +101,22 @@ struct Provider: TimelineProvider {
                 if startDate != nil && summary.hasPrefix("MORE - ") || summary.hasPrefix("RICE - ") {
                     var dotw: String
                     
-                    var scheduleComponents = summary.components(separatedBy: " - ")
+                    let scheduleComponents = summary.components(separatedBy: " - ")
                     dotw = dayFromDateString(dateString: startDate!)
                     
                     if scheduleComponents.count > 2 {
-                        if scheduleComponents[2] == "CLE/CLC/Staff Meeting Schedule" {
-                           // scheduleComponents[2] = "Mass Schedule"
-                        }
                         scheduleData.append(Schedule(date: date, id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: scheduleComponents[2], scheduleFamily: scheduleComponents[0]))
                     }
                     else {
                         scheduleData.append(Schedule(date: date, id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule", scheduleFamily: scheduleComponents[0]))
                     }
+                    
+                    
                 }
+            }
+            
+            if let cachedArray = try? PropertyListEncoder().encode(scheduleData) {
+                UserDefaults.standard.set(cachedArray, forKey: "WidgetData")
             }
             
             let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: date)
@@ -123,8 +137,7 @@ struct MainWidget : Widget {
             
             WidgetView(data: data)
         }
-        // you can use anything..
-        .description(Text("Next Up"))
+        .description(Text("Shows an overview of the next school day."))
         .configurationDisplayName(Text("STMC Widget"))
         .supportedFamilies([.systemSmall])
     }
@@ -167,7 +180,7 @@ private func formatDate (dateString: String) -> String {
     }
 }
 
-struct Schedule: Identifiable, Hashable, TimelineEntry {
+struct Schedule: Identifiable, Hashable, TimelineEntry, Codable {
     var date: Date
     var id: String
     var summary: String
