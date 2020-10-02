@@ -12,8 +12,8 @@ import SwiftyJSON
 
 // Defines basic API information.
 struct API {
-    static let url = "https://ericzhang.ca/app/api/"
-    static let calendar = "https://m-gapdev.stthomasmorecollegiate.ca/temp/tv/calendar.php"
+    static let url = "https://app.stmc.bc.ca/api/"
+    static let calendar = "https://app.stmc.bc.ca/api/calendar/"
 }
 
 let houseGradients = Gradient(colors: [Color("Darker STMC"), .STMC])

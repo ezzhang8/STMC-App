@@ -53,7 +53,7 @@ struct CalendarDetails: View {
                     }
                 }
             }
-            if CalendarEvent?.description != nil {
+            if CalendarEvent?.description != nil && !(CalendarEvent?.description?.contains("</"))!{
                 Section (header:
                     HStack {
                         Image(systemName: "square.and.pencil")

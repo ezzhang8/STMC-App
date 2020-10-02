@@ -208,32 +208,60 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
         ["Block \(blockArray[3])", "1:15-2:30"],
         ["Afternoon Y Blocks", "2:35-3:50"]
     ]
-    scheduleArray["CLE/CLC/Staff Meeting Schedule SR"] = [
+    scheduleArray["Career Education Schedule SR"] = [
         ["Morning X Blocks", "7:00-8:15"],
-        ["Staff Meeting/PLC", "8:20-9:05"],
-        ["Warning Bell", "9:10"],
-        ["Block \(blockArray[0])", "9:15-10:00"],
-        ["Block \(blockArray[1])", "10:05-10:50"],
-        ["Block \(blockArray[2])", "10:55-11:40"],
-        ["Sr. School Lunch", "11:40-12:10"],
-        ["CE 10-12", "12:15-12:55"],
-        ["Block \(blockArray[3])", "12:55-1:40"],
-        ["COMPASS/FLEX Time", "1:45-2:30"],
+        ["Warning Bell", "8:20"],
+        ["Block \(blockArray[0])", "8:25-9:30"],
+        ["Block \(blockArray[1])", "9:35-10:40"],
+        ["Sr. School Break", "10:40-10:45"],
+        ["Block \(blockArray[2])", "10:50-11:55"],
+        ["Sr. School Lunch", "11:55-12:30"],
+        ["CE 10-12", "12:35-1:25"],
+        ["Block \(blockArray[3])", "1:25-2:30"],
         ["Afternoon Y Blocks", "2:35-3:50"]
     ]
-    scheduleArray["CLE/CLC/Staff Meeting Schedule JR"] = [
+    scheduleArray["Career Education Schedule JR"] = [
         ["Morning X Blocks", "7:00-8:15"],
-        ["Staff Meeting/PLC", "8:20-9:05"],
-        ["Warning Bell", "9:10"],
-        ["Block \(blockArray[0])", "9:15-10:00"],
-        ["Block \(blockArray[1])", "10:05-10:50"],
-        ["Jr. School Lunch", "10:50-11:20"],
-        ["Block \(blockArray[2])", "11:25-12:10"],
-        ["CE 8/9", "12:15-12:55"],
-        ["Block \(blockArray[3])", "12:55-1:40"],
-        ["COMPASS/FLEX Time", "1:45-2:30"],
+        ["Warning Bell", "8:20"],
+        ["Block \(blockArray[0])", "8:25-9:30"],
+        ["Jr. School Break", "9:30-9:35"],
+        ["Block \(blockArray[1])", "9:40-10:45"],
+        ["Jr. School Lunch", "10:45-11:20"],
+        ["Block \(blockArray[2])", "11:25-12:30"],
+        ["CE 8-9", "12:35-1:25"],
+        ["Block \(blockArray[3])", "1:25-2:30"],
         ["Afternoon Y Blocks", "2:35-3:50"]
     ]
+    
+    scheduleArray["PLC/ Staff Meetings/ Compass Schedule SR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["PLC/Staff Meetings", "8:20-9:05"],
+        ["Warning Bell", "9:10"],
+        ["Block \(blockArray[0])", "9:15-10:10"],
+        ["Block \(blockArray[1])", "10:15-11:10"],
+        ["Block \(blockArray[2])", "11:15-12:10"],
+        ["Sr. School Lunch", "12:10-12:45"],
+        ["Block \(blockArray[3])", "12:50-1:45"],
+        ["Compass Time", "1:50-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
+    ]
+    
+    scheduleArray["PLC/ Staff Meetings/ Compass Schedule JR"] = [
+        ["Morning X Blocks", "7:00-8:15"],
+        ["PLC/Staff Meetings", "8:20-9:05"],
+        ["Warning Bell", "9:10"],
+        ["Block \(blockArray[0])", "9:15-10:10"],
+        ["Block \(blockArray[1])", "10:15-11:10"],
+        ["Jr. School Lunch", "11:10-11:45"],
+        ["Block \(blockArray[2])", "11:50-12:45"],
+        ["Block \(blockArray[3])", "12:50-1:45"],
+        ["Compass Time", "1:50-2:30"],
+        ["Afternoon Y Blocks", "2:35-3:50"]
+    ]
+    
+    scheduleArray["PLC/ Staff Meeting/ Compass Schedule JR"] = scheduleArray["PLC/ Staff Meetings/ Compass Schedule JR"]
+    
+    scheduleArray["PLC/ Staff Meeting/ Compass Schedule SR"] = scheduleArray["PLC/ Staff Meetings/ Compass Schedule SR"]
     
     scheduleArray["Mass Schedule SR"] = [
         ["Morning X Blocks", "7:00-8:15"],
@@ -259,12 +287,15 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
         ["Afternoon Y Blocks", "2:35-3:50"]
     ]
     
+    scheduleArray["Default"] = [
+        ["Notice:", "No schedule is available for this day in app. Check if a schedule is available by opening the day's event in Safari."]
+    ]
     
     if scheduleArray[scheduleType] != nil {
         return scheduleArray[scheduleType] as? [[String]]
     }
     else {
-        return nil
+        return scheduleArray["Default"] as? [[String]]
     }
 }
 

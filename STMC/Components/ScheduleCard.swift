@@ -78,7 +78,9 @@ func formatDay(dayString: String) -> String {
 private func colorMatch(scheduleType: String) -> Color {
     let colorDict = [
         "Regular Schedule": Color.SPAD,
-        "CLE/CLC/Staff Meeting Schedule": Color.ACAS,
+        "Career Education Schedule": Color.ACAS,
+        "PLC/ Staff Meetings/ Compass Schedule": Color.LTST,
+        "PLC/ Staff Meeting/ Compass Schedule": Color.LTST,
         "Mass Schedule": Color.MASS,
         "Modified Schedule": Color.MODF
     ]
