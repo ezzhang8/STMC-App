@@ -36,6 +36,16 @@ struct CalendarList: View {
 
     var body: some View {
         List {
+            if self.Calendar.events.count == 0 {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .frame(width: 50, height: 50)
+                    Spacer()
+
+                }
+            }
             ForEach (Array(Calendar.months.enumerated()), id: \.element) { index, month in
                 Section (header:
                     HStack {

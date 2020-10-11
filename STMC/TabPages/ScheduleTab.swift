@@ -19,6 +19,7 @@ struct ScheduleTab: View {
             ScrollView {
                 Divider()
                 VStack(alignment: .leading) {
+
                     Section (header:
                         HStack {
                             Image(systemName: "arrow.right.circle")
@@ -31,6 +32,16 @@ struct ScheduleTab: View {
                         }
                         .padding(.leading)
                     ){
+                        if (ScheduleArray.data.count == 0) {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                                    .frame(width: 50, height: 50)
+                                Spacer()
+
+                            }
+                        }
                         ForEach(Array(ScheduleArray.data.enumerated()), id: \.element) { index, schedule in
                             if index == 0 {
                                 ScheduleCard(schedule: schedule, seniority: determineSeniority(userStatus: userStatus))
@@ -53,6 +64,16 @@ struct ScheduleTab: View {
                     .padding(.leading)
                 ){
                     VStack (alignment: .leading) {
+                        if (ScheduleArray.data.count == 0) {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                                    .frame(width: 50, height: 50)
+                                Spacer()
+
+                            }
+                        }
                         ForEach(Array(ScheduleArray.data.enumerated()), id: \.element) { index, schedule in
                             if index > 0 {
                                 ScheduleCard(schedule: schedule, seniority: determineSeniority(userStatus: userStatus))
@@ -99,6 +120,9 @@ private class Schedules: ObservableObject {
                         self.data = try! PropertyListDecoder().decode([Schedule].self, from: cachedData)
                     }
                 }
+                return
+            }
+            else if error != nil {
                 return
             }
             let items = json["items"].array!

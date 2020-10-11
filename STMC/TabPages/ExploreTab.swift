@@ -38,6 +38,16 @@ struct ExploreTab: View {
                     ) {
                         ScrollView (.horizontal, showsIndicators: false){
                             HStack(spacing: 10) {
+                                if (houses.houseData.count == 0) {
+                                    HStack {
+                                        Spacer()
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle())
+                                            .frame(width: 50, height: 50)
+                                        Spacer()
+
+                                    }
+                                }
                                 ForEach(houses.houseData, id: \.self) { house in
                                     HouseCard(house: house)
                                 }
@@ -155,6 +165,9 @@ private class Houses: ObservableObject {
                         self.houseData = try! PropertyListDecoder().decode([House].self, from: cachedData)
                     }
                 }
+                return
+            }
+            else if error != nil {
                 return
             }
             let houseStandings = json.array!

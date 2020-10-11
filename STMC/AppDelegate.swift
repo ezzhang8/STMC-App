@@ -106,13 +106,21 @@ class Profile: ObservableObject {
     }
     func retrieveSavedUser() {
         DispatchQueue.main.async {
-            let decoded = UserDefaults.standard.object(forKey: "GoogleUser") as! Data
-            let decodedGroups = try! NSKeyedUnarchiver.unarchivedObject(ofClass: GIDGoogleUser.self, from: decoded)
-            self.user = decodedGroups
+            let decoded = UserDefaults.standard.object(forKey: "GoogleUser") as? Data
             
+            if decoded != nil {
+                let decodedGroups = try! NSKeyedUnarchiver.unarchivedObject(ofClass: GIDGoogleUser.self, from: decoded!)
+                self.user = decodedGroups
+            }
+            else {
+                return
+            }
+                        
         }
     }
     func clear() {
+        UserDefaults.standard.set(nil, forKey: "GoogleUser")
+
         self.user = nil
     }
 }

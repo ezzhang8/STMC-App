@@ -31,7 +31,7 @@ struct ResourcesTab: View {
                         HStack {
                             Image("STMC")
                                 .resizable()
-                                .frame(width:20, height:20)
+                                .frame(width:18, height:20)
                                 .scaledToFit()
                             Text("STMC Website")
                         }
@@ -69,7 +69,7 @@ struct ResourcesTab: View {
                         HStack {
                             Image("STMC")
                                 .resizable()
-                                .frame(width:20, height:20)
+                                .frame(width:18, height:20)
                                 .scaledToFit()
                             Text("Learning Commons")
                         }
@@ -80,7 +80,7 @@ struct ResourcesTab: View {
                         HStack {
                             Image("STMC")
                                 .resizable()
-                                .frame(width:20, height:20)
+                                .frame(width:18, height:20)
                                 .scaledToFit()
                             Text("Student Life")
                         }

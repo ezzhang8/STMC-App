@@ -125,9 +125,9 @@ struct UserInfoView: View {
                 }
                 
                 Button(action:{
+                    self.presentationMode.wrappedValue.dismiss()
                     GIDSignIn.sharedInstance().signOut()
                     userStatus.clear()
-                    self.presentationMode.wrappedValue.dismiss()
                     
                 }) {
                     Text("Log Out")

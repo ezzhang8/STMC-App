@@ -18,7 +18,7 @@ struct ContentView: View {
                 VStack(alignment: .center){
                     Image("STMC")
                         .resizable()
-                        .frame(width: 64, height: 64)
+                        .frame(width: 58, height: 64)
                     Text("Sign in with your mySTMC Account")
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
