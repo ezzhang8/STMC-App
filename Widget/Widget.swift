@@ -28,7 +28,7 @@ struct WidgetView: View {
                 HStack {
                     Image("STMC")
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 27, height: 30)
                     VStack {
                         Text(data.widgetData[0].dotw)
                             .font(.headline)
