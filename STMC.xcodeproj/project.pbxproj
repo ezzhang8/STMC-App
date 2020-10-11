@@ -48,8 +48,6 @@
 		F6F2607724F0A24000087A8F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6F2607624F0A24000087A8F /* SwiftUI.framework */; };
 		F6F2607A24F0A24000087A8F /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F2607924F0A24000087A8F /* Widget.swift */; };
 		F6F2607D24F0A24200087A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6F2607C24F0A24200087A8F /* Assets.xcassets */; };
-		F6F2607F24F0A24200087A8F /* Widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = F6F2607B24F0A24000087A8F /* Widget.intentdefinition */; };
-		F6F2608024F0A24200087A8F /* Widget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = F6F2607B24F0A24000087A8F /* Widget.intentdefinition */; };
 		F6F2608324F0A24200087A8F /* WidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F6F2607324F0A24000087A8F /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F6F2608824F0A5AD00087A8F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669B76F239340BA00819E52 /* Constants.swift */; };
 		F6F2608C24F0AC1E00087A8F /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F6F2608B24F0AC1E00087A8F /* SwiftyJSON */; };
@@ -150,7 +148,6 @@
 		F6F2607424F0A24000087A8F /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		F6F2607624F0A24000087A8F /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		F6F2607924F0A24000087A8F /* Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
-		F6F2607B24F0A24000087A8F /* Widget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Widget.intentdefinition; sourceTree = "<group>"; };
 		F6F2607C24F0A24200087A8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6F2607E24F0A24200087A8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F6F2608E24F1959800087A8F /* BulletinCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinCard.swift; sourceTree = "<group>"; };
@@ -338,7 +335,6 @@
 			isa = PBXGroup;
 			children = (
 				F6F2607924F0A24000087A8F /* Widget.swift */,
-				F6F2607B24F0A24000087A8F /* Widget.intentdefinition */,
 				F6F2607C24F0A24200087A8F /* Assets.xcassets */,
 				F6F2607E24F0A24200087A8F /* Info.plist */,
 			);
@@ -554,7 +550,6 @@
 				F6099C5F2532655200E7A78C /* GuestView.swift in Sources */,
 				F6A8DDA824EDC2FC007ADC77 /* SignInView.swift in Sources */,
 				F65BD5FC24B135000075AF27 /* CalendarDetails.swift in Sources */,
-				F6F2608024F0A24200087A8F /* Widget.intentdefinition in Sources */,
 				F686735823947F0600CC0F72 /* CalendarView.swift in Sources */,
 				F6508837247D8C0B00939DAF /* ResourcesTab.swift in Sources */,
 				F669B765238B908A00819E52 /* ScheduleTab.swift in Sources */,
@@ -607,7 +602,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6F2607F24F0A24200087A8F /* Widget.intentdefinition in Sources */,
 				F6F2607A24F0A24000087A8F /* Widget.swift in Sources */,
 				F6F2608824F0A5AD00087A8F /* Constants.swift in Sources */,
 			);
@@ -781,6 +775,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STMC/STMC.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"STMC/Preview Content\"";
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				ENABLE_PREVIEWS = YES;
@@ -808,6 +803,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STMC/STMC.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"STMC/Preview Content\"";
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				ENABLE_PREVIEWS = YES;
@@ -916,6 +912,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -935,6 +932,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -956,6 +954,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -977,6 +976,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

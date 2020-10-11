@@ -41,6 +41,8 @@ struct ContentView: View {
                             .background(Color.gray)
                             .cornerRadius(30)
                     }
+                    Link("Privacy Policy", destination: URL(string: "https://app.stmc.bc.ca/privacy.php")!)
+                        .padding(.top, 10)
                 }
                 .padding(.vertical, 50)
                 .background(Blur(style: .systemThinMaterial))
