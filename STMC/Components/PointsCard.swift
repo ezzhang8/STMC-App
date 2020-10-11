@@ -26,6 +26,8 @@ struct PointsCard: View {
                     VStack(alignment: .leading) {
                         Text(action)
                             .font(.system(size: 18, weight: .semibold))
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                         Text(date)
                             .font(.system(size: 14, weight: .medium))
                     }

@@ -66,7 +66,7 @@ private class NetworkConnection: ObservableObject {
             else {
                 DispatchQueue.main.async {
                     self.connected = true
-                }
+                }   
             }
         }
         

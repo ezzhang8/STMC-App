@@ -10,6 +10,7 @@
 		F606570324EDA249007FBBAF /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F606570224EDA248007FBBAF /* GoogleSignIn.bundle */; };
 		F606570924EDA275007FBBAF /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F606570724EDA275007FBBAF /* GoogleSignInDependencies.framework */; };
 		F606570B24EDA276007FBBAF /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F606570824EDA275007FBBAF /* GoogleSignIn.framework */; };
+		F6099C5F2532655200E7A78C /* GuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6099C5E2532655200E7A78C /* GuestView.swift */; };
 		F6178F8524606A1900600557 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F6178F8424606A1900600557 /* SwiftyJSON */; };
 		F6178F87246119C800600557 /* ExploreTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6178F86246119C600600557 /* ExploreTab.swift */; };
 		F6178F892461C36500600557 /* HouseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6178F882461C36500600557 /* HouseCard.swift */; };
@@ -112,6 +113,7 @@
 		F606571024EDA28B007FBBAF /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		F606571224EDA293007FBBAF /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		F606571424EDA29E007FBBAF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F6099C5E2532655200E7A78C /* GuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestView.swift; sourceTree = "<group>"; };
 		F6178F86246119C600600557 /* ExploreTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTab.swift; sourceTree = "<group>"; };
 		F6178F882461C36500600557 /* HouseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseCard.swift; sourceTree = "<group>"; };
 		F6508836247D8C0B00939DAF /* ResourcesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesTab.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				F6D256DC238B1B3C009840CC /* AppDelegate.swift */,
 				F6A8DDA724EDC2FC007ADC77 /* SignInView.swift */,
 				F6F2604F24EDD59500087A8F /* MainView.swift */,
+				F6099C5E2532655200E7A78C /* GuestView.swift */,
 				F6D256DE238B1B3C009840CC /* SceneDelegate.swift */,
 				F6D256E0238B1B3C009840CC /* ContentView.swift */,
 				F6D256E7238B1B3E009840CC /* LaunchScreen.storyboard */,
@@ -548,6 +551,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6099C5F2532655200E7A78C /* GuestView.swift in Sources */,
 				F6A8DDA824EDC2FC007ADC77 /* SignInView.swift in Sources */,
 				F65BD5FC24B135000075AF27 /* CalendarDetails.swift in Sources */,
 				F6F2608024F0A24200087A8F /* Widget.intentdefinition in Sources */,
@@ -778,7 +782,7 @@
 				CODE_SIGN_ENTITLEMENTS = STMC/STMC.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"STMC/Preview Content\"";
-				DEVELOPMENT_TEAM = 92JTQUDT4N;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -790,7 +794,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhangapps.STMC;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -805,7 +809,7 @@
 				CODE_SIGN_ENTITLEMENTS = STMC/STMC.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"STMC/Preview Content\"";
-				DEVELOPMENT_TEAM = 92JTQUDT4N;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -817,7 +821,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhangapps.STMC;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -830,7 +834,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 48YA7U3QT8;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = STMCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -852,7 +856,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 48YA7U3QT8;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = STMCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -873,7 +877,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 48YA7U3QT8;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = STMCUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -893,7 +897,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 48YA7U3QT8;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = STMCUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -912,14 +916,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 92JTQUDT4N;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhangapps.STMC.OneSignalNotificationServiceExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -931,14 +935,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 92JTQUDT4N;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhangapps.STMC.OneSignalNotificationServiceExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -952,14 +956,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 92JTQUDT4N;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhangapps.STMC.Widget;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -973,14 +977,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 92JTQUDT4N;
+				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhangapps.STMC.Widget;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;

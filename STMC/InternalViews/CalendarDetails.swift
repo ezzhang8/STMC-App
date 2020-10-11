@@ -14,10 +14,11 @@ import EventKitUI
 struct CalendarDetails: View {
     @Environment(\.openURL) var openURL
     @State private var showAlert = false
+    @ObservedObject var eventSaver = CalendarSaver()
     var CalendarEvent: CalendarEvent?
     
     var alert: Alert {
-        Alert(title: Text("Event Saved"), message: Text("You can now view the event in the Calendar app."), dismissButton: .default(Text("OK")))
+        Alert(title: Text(eventSaver.completionTitle), message: Text(eventSaver.completionMsg), dismissButton: .default(Text("OK")))
     }
     var body: some View {
         List {
@@ -90,7 +91,7 @@ struct CalendarDetails: View {
                 }
             ){
                 Button(action: {
-                    saveEventToCalendar(CalendarEvent: CalendarEvent!)
+                    eventSaver.saveEventToCalendar(CalendarEvent: CalendarEvent!)
                     self.showAlert.toggle()
                 }) {
                     HStack {
@@ -118,6 +119,71 @@ struct CalendarDetails: View {
         .navigationBarTitle(Text(formatTitle(eventName: CalendarEvent?.summary ?? "Event")))
         .font(.body)
     }
+}
+
+class CalendarSaver: ObservableObject {
+    @Published var completionTitle: String
+    @Published var completionMsg: String
+    
+    init() {
+        self.completionTitle = ""
+        self.completionMsg = ""
+    }
+    func saveEventToCalendar(CalendarEvent: CalendarEvent) {
+        let eventStore = EKEventStore()
+        eventStore.requestAccess(to: .event) { (granted, error) in
+            if (granted) && (error == nil) {
+                let event:EKEvent = EKEvent(eventStore: eventStore)
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en-US")
+                
+                event.title = CalendarEvent.summary
+                
+                if CalendarEvent.startTime == nil {
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+
+                    event.isAllDay = true
+                    event.startDate = dateFormatter.date(from: CalendarEvent.startDate)
+                    event.endDate = dateFormatter.date(from: CalendarEvent.endDate)
+                }
+                else {
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+                                    
+                    event.isAllDay = false
+                    event.startDate = dateFormatter.date(from: CalendarEvent.startTime!)
+                    event.endDate = dateFormatter.date(from: CalendarEvent.endTime!)
+                }
+                event.notes = CalendarEvent.description ?? ""
+                event.calendar = eventStore.defaultCalendarForNewEvents
+                
+                do {
+                    try eventStore.save(event, span: .thisEvent)
+                    
+                    
+                } catch let error as NSError {
+                    print("failed to save event with error : \(error)")
+                    
+                    DispatchQueue.main.async {
+                        self.completionTitle = "Error saving"
+                        self.completionMsg = error as! String
+                    }
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.completionTitle = "Event Saved"
+                    self.completionMsg = "You can now view this event in your default calendar in the Calendar app."
+                }
+            }
+            else {
+                DispatchQueue.main.async {
+                    self.completionTitle = "Access not granted"
+                    self.completionMsg = "STMC does not have permission to access the Calendar to add events."
+                }
+            }
+        }
+    }
+    
 }
 
 private func saveEventToCalendar(CalendarEvent: CalendarEvent) {

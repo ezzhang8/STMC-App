@@ -22,6 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance()?.restorePreviousSignIn()
         
+        userStatus.retrieveSavedUser()
+        
         //START OneSignal initialization code
         let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false, kOSSettingsKeyInAppLaunchURL: false]
           
@@ -97,9 +99,22 @@ class Profile: ObservableObject {
     func updateUser(user: GIDGoogleUser) {
         DispatchQueue.main.async {
             self.user = user
+            let encodedData: Data = try! NSKeyedArchiver.archivedData(withRootObject: user, requiringSecureCoding: false)
+            
+            UserDefaults.standard.set(encodedData, forKey: "GoogleUser")
+        }
+    }
+    func retrieveSavedUser() {
+        DispatchQueue.main.async {
+            let decoded = UserDefaults.standard.object(forKey: "GoogleUser") as! Data
+            let decodedGroups = try! NSKeyedUnarchiver.unarchivedObject(ofClass: GIDGoogleUser.self, from: decoded)
+            self.user = decodedGroups
+            
         }
     }
     func clear() {
         self.user = nil
     }
 }
+
+

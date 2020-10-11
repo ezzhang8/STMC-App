@@ -25,6 +25,8 @@ struct BulletinCard: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .truncationMode(.tail)
                       //  .truncationMode(.head)
                     Text(formatDate(dateString: bulletin.dateAdded))
                         .font(.footnote)
@@ -33,7 +35,6 @@ struct BulletinCard: View {
                         .foregroundColor(.white)
                 }
                 .frame(width: 200, height: 110)
-               // .padding(.all)
             }
         }
         .buttonStyle(ScaleButtonStyle())

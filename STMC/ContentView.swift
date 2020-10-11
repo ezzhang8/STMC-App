@@ -11,8 +11,9 @@ import GoogleSignIn
 
 struct ContentView: View {
     @EnvironmentObject var userStatus: Profile
+    @EnvironmentObject var guestMode: GuestMode
     var body: some View {
-        if self.userStatus.user == nil {
+        if self.userStatus.user?.profile.name == nil && self.guestMode.enabled == false {
             ZStack {
                 VStack(alignment: .center){
                     Image("STMC")
@@ -29,7 +30,17 @@ struct ContentView: View {
                             .padding(.top, 10)
                         Spacer()
                     }
-                    
+                    Button(action: {
+                        self.guestMode.enabled(bool: true)
+                    }) {
+                        Text("Use in Guest Mode")
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                            .padding(.vertical, 15)
+                            .padding(.horizontal, 30)
+                            .background(Color.gray)
+                            .cornerRadius(30)
+                    }
                 }
                 .padding(.vertical, 50)
                 .background(Blur(style: .systemThinMaterial))
@@ -39,11 +50,27 @@ struct ContentView: View {
             .background(Image("HomePlaceholder"))
             .padding(.horizontal)
         }
+        else if self.guestMode.enabled == true {
+            GuestView()
+                .environmentObject(self.guestMode)
+        }
         else {
             MainView()
                 .environmentObject(userStatus)
         }
         
+    }
+}
+class GuestMode: ObservableObject {
+    @Published var enabled: Bool
+    init(enabled: Bool) {
+        self.enabled = enabled
+    }
+    
+    func enabled(bool: Bool) {
+        DispatchQueue.main.async {
+            self.enabled = bool
+        }
     }
 }
 

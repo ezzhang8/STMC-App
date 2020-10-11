@@ -32,8 +32,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let userStatus = (UIApplication.shared.delegate as! AppDelegate).userStatus
+            let guestMode = GuestMode(enabled: false)
 
-            window.rootViewController = UIHostingController(rootView: contentView.environmentObject(userStatus))
+            window.rootViewController = UIHostingController(rootView: contentView.environmentObject(userStatus).environmentObject(guestMode))
             self.window = window
             window.makeKeyAndVisible()
         }

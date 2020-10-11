@@ -149,7 +149,7 @@ private class Houses: ObservableObject {
         sendRequest(url: String(API.url+"houses/"), completion: { json in
             let error = json["error"].string
 
-            if error != nil {
+            if error == "The Internet connection appears to be offline."  {
                 DispatchQueue.main.async {
                     if let cachedData = UserDefaults.standard.data(forKey: "HouseData") {
                         self.houseData = try! PropertyListDecoder().decode([House].self, from: cachedData)
@@ -170,8 +170,6 @@ private class Houses: ObservableObject {
                 houseContainer.sort {
                     $0.points > $1.points
                 }
-
-                
             }
             
             DispatchQueue.main.async {

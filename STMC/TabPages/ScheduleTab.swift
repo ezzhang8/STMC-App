@@ -93,7 +93,7 @@ private class Schedules: ObservableObject {
         sendRequest(url: API.calendar, completion: { json in
             let error = json["error"].string
 
-            if error != nil {
+            if error == "The Internet connection appears to be offline." {
                 DispatchQueue.main.async {
                     if let cachedData = UserDefaults.standard.data(forKey: "ScheduleData") {
                         self.data = try! PropertyListDecoder().decode([Schedule].self, from: cachedData)

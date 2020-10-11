@@ -11,8 +11,29 @@ import UIKit
 import GoogleSignIn
 
 struct SignInView: View {
+    @EnvironmentObject var guestMode: GuestMode
+
     var body: some View {
-        SignInButton()
+        VStack {
+            Text("To access all features of the STMC App, please exit Guest Mode and sign in with a school account.")
+                .fontWeight(.bold)
+                .font(.headline)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            Button(action: {
+                self.guestMode.enabled(bool: false)
+            }) {
+                Text("Exit Guest Mode")
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 15)
+                    .padding(.horizontal, 30)
+                    .background(Color.STMC)
+                    .cornerRadius(30)
+            }
+            .padding(.top, 10)
+        }
+      
     }
 }
 
@@ -33,37 +54,5 @@ struct LogInButton: View {
                 .background(Color.blue)
                 .cornerRadius(30)
         }
-    }
-}
-
-struct SignInButton: UIViewRepresentable {
-    func makeUIView(context: UIViewRepresentableContext<SignInButton>) -> GIDSignInButton {
-
-        let button = GIDSignInButton()
-        
-//        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-//
-//        if var topController = keyWindow?.rootViewController {
-//            while let presentedViewController = topController.presentedViewController {
-//                topController = presentedViewController
-//            }
-//            GIDSignIn.sharedInstance()?.presentingViewController = topController
-//        // topController should now be your topmost view controller
-//        }
-        
-        
-        //print(UIApplication.shared.windows.first?.rootViewController)
-        GIDSignIn.sharedInstance()?.presentingViewController = UIApplication.shared.windows.first?.rootViewController
-        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
-        return button
-    }
-
-    func updateUIView(_ uiView: GIDSignInButton, context: UIViewRepresentableContext<SignInButton>) {
-    }
-}
-
-struct SignInView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignInView()
     }
 }

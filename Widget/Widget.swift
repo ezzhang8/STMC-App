@@ -119,7 +119,7 @@ struct Provider: TimelineProvider {
                 UserDefaults.standard.set(cachedArray, forKey: "WidgetData")
             }
             
-            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: date)
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: date)
             let data = Model(date: date, widgetData: scheduleData)
 
             let timeline = Timeline(entries: [data] , policy: .after(nextUpdate!))
