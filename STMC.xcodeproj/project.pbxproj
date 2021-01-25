@@ -19,8 +19,6 @@
 		F6508837247D8C0B00939DAF /* ResourcesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6508836247D8C0B00939DAF /* ResourcesTab.swift */; };
 		F650883B247F364A00939DAF /* TicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F650883A247F364A00939DAF /* TicketView.swift */; };
 		F65BD5FC24B135000075AF27 /* CalendarDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65BD5FB24B135000075AF27 /* CalendarDetails.swift */; };
-		F663760B25A157BF0068BA06 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F663760A25A157BF0068BA06 /* PartialSheet */; };
-		F663761325A3A53F0068BA06 /* SwiftUIRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = F663761225A3A53F0068BA06 /* SwiftUIRefresh */; };
 		F669B765238B908A00819E52 /* ScheduleTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669B764238B908A00819E52 /* ScheduleTab.swift */; };
 		F669B768238B97B500819E52 /* ScheduleDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669B767238B97B500819E52 /* ScheduleDetails.swift */; };
 		F669B76B23933F6E00819E52 /* ScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669B76A23933F6E00819E52 /* ScheduleCard.swift */; };
@@ -163,11 +161,9 @@
 				F6F2606324EF41AB00087A8F /* OneSignal in Frameworks */,
 				F6A8DD9924EDAB5E007ADC77 /* SystemConfiguration.framework in Frameworks */,
 				F6A8DD9724EDAB5C007ADC77 /* SafariServices.framework in Frameworks */,
-				F663760B25A157BF0068BA06 /* PartialSheet in Frameworks */,
 				F61C940A2574139800F0679E /* StatefulTabView in Frameworks */,
 				F6A8DD9524EDAB5B007ADC77 /* LocalAuthentication.framework in Frameworks */,
 				F606570924EDA275007FBBAF /* GoogleSignInDependencies.framework in Frameworks */,
-				F663761325A3A53F0068BA06 /* SwiftUIRefresh in Frameworks */,
 				F606570B24EDA276007FBBAF /* GoogleSignIn.framework in Frameworks */,
 				F6178F8524606A1900600557 /* SwiftyJSON in Frameworks */,
 			);
@@ -364,8 +360,6 @@
 				F6178F8424606A1900600557 /* SwiftyJSON */,
 				F6F2606224EF41AB00087A8F /* OneSignal */,
 				F61C94092574139800F0679E /* StatefulTabView */,
-				F663760A25A157BF0068BA06 /* PartialSheet */,
-				F663761225A3A53F0068BA06 /* SwiftUIRefresh */,
 			);
 			productName = STMC;
 			productReference = F6D256D9238B1B3C009840CC /* STMC.app */;
@@ -918,7 +912,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -926,7 +920,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -939,7 +933,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -947,7 +941,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -962,7 +956,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -970,7 +964,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -985,7 +979,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -993,7 +987,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1114,16 +1108,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F61C94082574139800F0679E /* XCRemoteSwiftPackageReference "StatefulTabView" */;
 			productName = StatefulTabView;
-		};
-		F663760A25A157BF0068BA06 /* PartialSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F663760925A157BF0068BA06 /* XCRemoteSwiftPackageReference "PartialSheet" */;
-			productName = PartialSheet;
-		};
-		F663761225A3A53F0068BA06 /* SwiftUIRefresh */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F663761125A3A53D0068BA06 /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */;
-			productName = SwiftUIRefresh;
 		};
 		F6F2606224EF41AB00087A8F /* OneSignal */ = {
 			isa = XCSwiftPackageProductDependency;
