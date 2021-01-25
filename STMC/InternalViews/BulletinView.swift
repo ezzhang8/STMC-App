@@ -9,7 +9,6 @@
 import SwiftUI
 import Combine
 
-
 struct BulletinView: View {
     var bulletin: Bulletin
     @Environment(\.openURL) var openURL
@@ -25,12 +24,18 @@ struct BulletinView: View {
                 .offset(y: -self.width)
             ScrollView(showsIndicators: false) {
                 VStack {
-                    RemoteImage(url: URL(string: bulletin.imageLink!)!)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 300)
-                        .cornerRadius(10)
-                        .padding(EdgeInsets(top: 75, leading: 0, bottom: 0, trailing: 0))
-                    
+                    if bulletin.imageLink != nil {
+                        RemoteImage(url: URL(string: bulletin.imageLink!)!)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 300)
+                            .cornerRadius(10)
+                            .padding(EdgeInsets(top: 75, leading: 0, bottom: 0, trailing: 0))
+                    }
+                    else {
+                        Spacer()
+                            .padding(EdgeInsets(top: 100, leading: 0, bottom: 0, trailing: 0))
+
+                    }
                     VStack {
                         VStack(alignment: .leading) {
                             Text(bulletin.name)
@@ -46,8 +51,6 @@ struct BulletinView: View {
                             Text(bulletin.description)
                                 .font(.callout)
                                 .padding(.bottom, 5)
-                            
-                            
                         }
                         .padding(15)
                         .frame(width: self.width-30)
@@ -55,15 +58,19 @@ struct BulletinView: View {
                     }
                     .background(Color.TBRC)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
+                    Spacer()
                     if bulletin.webLink != nil {
                         Button(action: {
                             openURL(URL(string: bulletin.webLink!)!)
                         }) {
                             HStack {
+                                
                                 Image(systemName: "paperplane.fill")
                                     .resizable()
                                     .frame(width: 20, height: 20)
                                     .foregroundColor(Color.white)
+                                    
+                                
                                 Text("Open Link")
                             }
                             .padding(.horizontal, 12)
@@ -82,10 +89,16 @@ struct BulletinView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 HStack {
-                    Image(systemName: "chevron.left.circle.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(Color.TBRC)
+                    ZStack {
+                        Rectangle()
+                            .foregroundColor(Color.STMC)
+                            .frame(width: 30, height: 30)
+                            .cornerRadius(15)
+                        Image(systemName: "chevron.left.circle.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(Color.TBRC)
+                    }
                 }
             }
             .position(x: 130, y: 35)
@@ -147,6 +160,7 @@ struct BulletinHouseView: View {
                     }
                     .background(Color.TBRC)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
+                    Spacer()
                     if bulletin.webLink != nil {
                         Button(action: {
                             openURL(URL(string: bulletin.webLink!)!)
@@ -160,6 +174,7 @@ struct BulletinHouseView: View {
                             }
                             .padding(.horizontal, 12)
                             .padding(.vertical, 8)
+                            
                         }
                         .background(LinearGradient(gradient: houseGradient[bulletin.house!] ?? houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading))
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
@@ -167,6 +182,7 @@ struct BulletinHouseView: View {
                         .clipShape(Capsule())
                         .padding(.vertical, 10)
                         .buttonStyle(ScaleButtonStyle())
+                        Spacer()
                     }
                 }
             }
@@ -174,10 +190,16 @@ struct BulletinHouseView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 HStack {
-                    Image(systemName: "chevron.left.circle.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(Color.TBRC)
+                    ZStack {
+                        Rectangle()
+                            .foregroundColor(houseColors[bulletin.house!])
+                            .frame(width: 30, height: 30)
+                            .cornerRadius(15)
+                        Image(systemName: "chevron.left.circle.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(Color.TBRC)
+                    }
                 }
             }
             .position(x: 130, y: 35)

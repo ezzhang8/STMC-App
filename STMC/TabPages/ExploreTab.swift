@@ -86,11 +86,14 @@ struct ExploreTab: View {
                                     Text("No bulletins to display")
                                 } else {
                                     ForEach(bulletins.bulletinData, id: \.self) { bulletin in
-                                        BulletinCard(bulletin: bulletin)
+                                        if bulletin.house != nil {
+                                            BulletinHouseCard(bulletin: bulletin)
+                                        }
+                                        else {
+                                            BulletinCard(bulletin: bulletin)
+                                        }
                                     }
                                 }
-                                BulletinHouseCard(bulletin: Bulletin(id: 19389318, name: "This is a much longer title!", dateAdded: "2020-01-02", description: "This is a test description that is much much longer lorem ipsum lolo lflan fndsfn  fdf d fdjfdjfd fdfndjf djkf djkf djk", imageLink: nil, webLink: "https://google.com", house: "Canterbury"))
-
                             }
                             .padding([.horizontal, .bottom])
                         }
@@ -108,7 +111,23 @@ struct ExploreTab: View {
                         }
                         .padding(.leading)
                     ) {
+                        ScrollView (.horizontal, showsIndicators: false) {
+                            HStack(spacing: 10) {
+                                NavigationLink(destination: RoomView()) {
+                                    SmallCard(text: "Rooms")
+                                }
+                                .buttonStyle(ScaleButtonStyle())
+                                NavigationLink(destination: LockerView()) {
+                                    SmallCard(text: "Lockers")
+                                }
+                                .buttonStyle(ScaleButtonStyle())
+
+                            }
+                            .padding([.horizontal, .bottom])
+
+                        }
                     
+                        Spacer()
                     }
             }
             .navigationBarTitle(Text("Explore"))
@@ -131,6 +150,37 @@ struct ExploreTab: View {
             .background(Color.GR.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
         }
         
+    }
+}
+
+struct SmallCard: View {
+    var text: String
+    var body: some View {
+        ZStack {
+            VStack {
+                ZStack {
+                    Image("STMC")
+                        .resizable()
+                        .frame(width: 110, height: 128)
+                        .shadow(radius: 8)
+                        .opacity(0.3)
+                        .offset(x: 50, y: 40)
+                    VStack(alignment: .leading) {
+                        Text(text)
+                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .foregroundColor(Color.white)
+                    }
+                    .padding(15)
+                }
+                .background(
+                    LinearGradient(gradient: houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+
+                .padding(.bottom, 5)
+            }
+
+        }
     }
 }
 
@@ -166,7 +216,6 @@ private class Houses: ObservableObject {
                 }
                 return
             }
-            
             
             let houseStandings = json.array!
             
@@ -223,11 +272,12 @@ private class Bulletins: ObservableObject {
                 let dateAdded = bulletin["dateAdded"].stringValue
                 let name = bulletin["name"].stringValue
                 let description = bulletin["description"].stringValue
-                let imageLink = bulletin["imageLink"].stringValue
-                let webLink = bulletin["webLink"].stringValue
-                
+                let imageLink = bulletin["imageLink"].string
+                let webLink = bulletin["webLink"].string
+                let house = bulletin["house"].string
+
                 DispatchQueue.main.async {
-                    self.bulletinData.append(Bulletin(id: id, name: name, dateAdded: dateAdded,  description: description, imageLink: imageLink, webLink: webLink))
+                    self.bulletinData.append(Bulletin(id: id, name: name, dateAdded: dateAdded,  description: description, imageLink: imageLink, webLink: webLink, house: house))
                 }
             }
         })

@@ -55,13 +55,12 @@ struct NotificationEntry: View {
         ZStack {
             VStack {
                 HStack {
-                    
                     Text(notification.date)
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
                         .padding(.leading, 10)
                     Spacer()
                     Text(notification.time)
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
                         .padding(.trailing, 10)
                 }
                 .padding([.top, .leading, .trailing], 12)

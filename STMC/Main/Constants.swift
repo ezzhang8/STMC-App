@@ -48,9 +48,13 @@ func sendRequest(url: String, completion: @escaping(JSON)->()) {
             return
         }
         
-        let json = try! JSON(data: data ?? Data(), options: .allowFragments)
-        
-        completion(json)
+        if let result = try? JSON(data: data ?? Data(), options: .allowFragments) {
+            completion(result)
+        }
+        else {
+            let errorJSON = JSON.init(parseJSON: String("{ \"error\": \"true\" }"))
+            completion(errorJSON)
+        }
         
     }.resume()
 }
@@ -70,6 +74,7 @@ extension Color {
     static let LC = Color("Link Color")
 
 }
+
 
 
 struct Constants_Previews: PreviewProvider {

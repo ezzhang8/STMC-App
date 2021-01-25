@@ -151,7 +151,7 @@ private class Schedules: ObservableObject {
     }
     
     func override() {
-        sendRequest(url: String(API.url+"overrides.php"), completion: { json in
+        sendRequest(url: String(API.url+"overrides/"), completion: { json in
             let error = json["error"].string
 
             if error != nil {
@@ -175,7 +175,6 @@ private class Schedules: ObservableObject {
                         self.data[index!] = Schedule(id: id, summary: blockRotation, dotw: dotw, startDate: date, scheduleType: scheduleType, scheduleFamily: scheduleFamily)
                         if let cachedArray = try? PropertyListEncoder().encode(self.data) {
                             self.UD.set(cachedArray, forKey: "ScheduleData")
-                            print("tttt")
                         }
                     }
                 }
@@ -186,7 +185,6 @@ private class Schedules: ObservableObject {
         
     }
     func load() {
-        print("testload")
 //        DispatchQueue.main.async {
 //            self.data = [Schedule]()
 //            self.scheduleData = [Schedule]()
@@ -245,7 +243,6 @@ private class Schedules: ObservableObject {
     }
     
     func loadEventsFromCache() {
-        print("ok")
         DispatchQueue.main.async {
             self.data = [Schedule]()
             self.scheduleData = [Schedule]()

@@ -10,59 +10,74 @@ import WidgetKit
 import SwiftUI
 import SwiftyJSON
 
-struct Model: TimelineEntry {
+class Model: TimelineEntry, ObservableObject {
     var date: Date
-    var widgetData: [Schedule]
+    @Published var widgetData: [Schedule]
+    
+    init(date: Date, widgetData: [Schedule]) {
+        self.date = date
+        self.widgetData = widgetData
+    }
+    
+    func changeSchedule(schedule: Schedule) {
+        DispatchQueue.main.async {
+            self.widgetData[0] = schedule
+        }
+    }
 }
 
 struct WidgetView: View {
-    var data: Model
-    
+    @ObservedObject var data: Model
+
     var body: some View {
         ZStack {
             Rectangle()
                 .fill(
                     LinearGradient(gradient: houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading)
                 )
+            Image("STMC")
+                .resizable()
+                .frame(width: 110, height: 128)
+                .shadow(radius: 8)
+                .opacity(0.3)
+                .offset(x: 50, y: 40)
             VStack(alignment: .leading){
-                HStack {
-                    Image("STMC")
-                        .resizable()
-                        .frame(width: 27, height: 30)
-                    VStack {
-                        Text(data.widgetData[0].dotw)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                       Text(data.widgetData[0].scheduleFamily)
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .italic()
-                        
-                    }
-                    
+                VStack(alignment: .center){
+                    Text(data.widgetData[0].dotw)
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundColor(.white)
                 }
+                    
+                
                 Text(formatDate(dateString: data.widgetData[0].startDate))
-                    .font(.subheadline)
+                    .font(.system(.subheadline, design: .rounded))
+
                     .fontWeight(.semibold)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white)
                 Text(data.widgetData[0].summary)
                     .font(.title)
                     .fontWeight(.heavy)
                     .foregroundColor(.white)
                     .shadow(radius: 2)
+                Text(data.widgetData[0].scheduleFamily)
+                    .font(.system(.caption, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+
                 Text(String("\(data.widgetData[0].scheduleType)"))
                     .font(.footnote)
                     .foregroundColor(.white)
                     .lineLimit(1)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 10)
+            .frame(width: 300)
         }
     }
 }
 
 struct Provider: TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping(Model)-> Void) {
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Monday", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
         completion(loadingData)
     }
     func placeholder(in context: Context) -> Model {
@@ -70,7 +85,7 @@ struct Provider: TimelineProvider {
             // inital snapshot....
             // or loading type content....
             
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Mon", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Monday", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
             
             return loadingData
     }
@@ -113,15 +128,38 @@ struct Provider: TimelineProvider {
                 }
             }
             
-            if let cachedArray = try? PropertyListEncoder().encode(scheduleData) {
-                UserDefaults.standard.set(cachedArray, forKey: "WidgetData")
-            }
-            
-            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: date)
-            let data = Model(date: date, widgetData: scheduleData)
+            DispatchQueue.global().async {
+                let request = syncRequest(API.url+"overrides/")
+                let json = request.0
+                let error = request.1
+                
+                if error != nil {
+                    return
+                }
+                
+                let array = json.array!
 
-            let timeline = Timeline(entries: [data] , policy: .after(nextUpdate!))
-            completion(timeline)
+                for day in array {
+                    let dateStart = day["date"].stringValue
+                    let blockRotation = day["blockRotation"].stringValue
+                    let scheduleType = day["scheduleType"].stringValue
+                    let scheduleFamily = day["scheduleFamily"].stringValue
+
+                    if scheduleData[0].startDate == dateStart {
+                        scheduleData[0] = Schedule(date: date, id: "override", summary: blockRotation, dotw: scheduleData[0].dotw, startDate: dateStart, scheduleType: scheduleType, scheduleFamily: scheduleFamily)
+                    }
+                }
+                
+                if let cachedArray = try? PropertyListEncoder().encode(scheduleData) {
+                    UserDefaults.standard.set(cachedArray, forKey: "WidgetData")
+                }
+                
+                let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: date)
+                let data = Model(date: date, widgetData: scheduleData)
+
+                let timeline = Timeline(entries: [data] , policy: .after(nextUpdate!))
+                completion(timeline)
+            }
         })
     }
 }
@@ -130,9 +168,7 @@ struct Provider: TimelineProvider {
 struct MainWidget : Widget {
     
     var body: some WidgetConfiguration {
-        
         StaticConfiguration(kind: "Widget", provider: Provider()) { data in
-            
             WidgetView(data: data)
         }
         .description(Text("Shows an overview of the next school day."))
@@ -150,7 +186,7 @@ private func dayFromDateString(dateString: String) -> String{
     
     let components = dateFormatter.weekdaySymbols?[Calendar.current.component(.weekday, from: date!)-1]
     
-    return String(components?.prefix(3) ?? "Error")
+    return String(components ?? "Error")
 }
 
 private func formatDate (dateString: String) -> String {
@@ -186,4 +222,21 @@ struct Schedule: Identifiable, Hashable, TimelineEntry, Codable {
     var startDate: String
     var scheduleType: String
     var scheduleFamily: String
+}
+
+func syncRequest(_ url: String) -> (JSON, Error?) {
+    var data: Data?
+    var error: Error?
+    let url = URL(string: url)!
+    let semaphore = DispatchSemaphore(value: 0)
+    let dataTask = URLSession.shared.dataTask(with: URLRequest(url: url)) {
+        data = $0
+        error = $2
+        semaphore.signal()
+    }
+    dataTask.resume()
+    _ = semaphore.wait(timeout: .distantFuture)
+    
+    let json = try! JSON(data: data ?? Data(), options: .allowFragments)
+    return (json, error)
 }

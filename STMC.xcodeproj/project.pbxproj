@@ -16,11 +16,8 @@
 		F6178F892461C36500600557 /* HouseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6178F882461C36500600557 /* HouseCard.swift */; };
 		F61C93D52572EDFD00F0679E /* NotificationTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61C93D42572EDFC00F0679E /* NotificationTab.swift */; };
 		F61C940A2574139800F0679E /* StatefulTabView in Frameworks */ = {isa = PBXBuildFile; productRef = F61C94092574139800F0679E /* StatefulTabView */; };
-		F62E7DF525474C9900773A95 /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62E7DF425474C9900773A95 /* CourseView.swift */; };
-		F62E7DFC25476AFA00773A95 /* CourseDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62E7DFB25476AFA00773A95 /* CourseDetails.swift */; };
 		F6508837247D8C0B00939DAF /* ResourcesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6508836247D8C0B00939DAF /* ResourcesTab.swift */; };
 		F650883B247F364A00939DAF /* TicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F650883A247F364A00939DAF /* TicketView.swift */; };
-		F657675924C26FFE007E8AFB /* UpdateCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F657675824C26FFB007E8AFB /* UpdateCard.swift */; };
 		F65BD5FC24B135000075AF27 /* CalendarDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65BD5FB24B135000075AF27 /* CalendarDetails.swift */; };
 		F663760B25A157BF0068BA06 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F663760A25A157BF0068BA06 /* PartialSheet */; };
 		F663761325A3A53F0068BA06 /* SwiftUIRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = F663761225A3A53F0068BA06 /* SwiftUIRefresh */; };
@@ -40,7 +37,6 @@
 		F6D256E3238B1B3E009840CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6D256E2238B1B3E009840CC /* Assets.xcassets */; };
 		F6D256E9238B1B3E009840CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6D256E7238B1B3E009840CC /* LaunchScreen.storyboard */; };
 		F6E9AB9A24E8A5FC00B3526B /* HouseDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E9AB9924E8A5FC00B3526B /* HouseDetails.swift */; };
-		F6E9AB9E24E9CF7000B3526B /* AdvisoryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E9AB9D24E9CF7000B3526B /* AdvisoryCard.swift */; };
 		F6E9ABA024E9F64000B3526B /* PointsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E9AB9F24E9F64000B3526B /* PointsCard.swift */; };
 		F6F2605024EDD59500087A8F /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F2604F24EDD59500087A8F /* MainView.swift */; };
 		F6F2605824EF3F3900087A8F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F2605724EF3F3900087A8F /* NotificationService.swift */; };
@@ -60,7 +56,6 @@
 		F6F2608D24F0B25A00087A8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6D256E2238B1B3E009840CC /* Assets.xcassets */; };
 		F6F2608F24F1959800087A8F /* BulletinCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F2608E24F1959800087A8F /* BulletinCard.swift */; };
 		F6F2609324F1E02500087A8F /* BulletinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F2609224F1E02500087A8F /* BulletinView.swift */; };
-		F6F2609524F36A4C00087A8F /* SocialCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F2609424F36A4A00087A8F /* SocialCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,11 +116,8 @@
 		F6178F86246119C600600557 /* ExploreTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTab.swift; sourceTree = "<group>"; };
 		F6178F882461C36500600557 /* HouseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseCard.swift; sourceTree = "<group>"; };
 		F61C93D42572EDFC00F0679E /* NotificationTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTab.swift; sourceTree = "<group>"; };
-		F62E7DF425474C9900773A95 /* CourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseView.swift; sourceTree = "<group>"; };
-		F62E7DFB25476AFA00773A95 /* CourseDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetails.swift; sourceTree = "<group>"; };
 		F6508836247D8C0B00939DAF /* ResourcesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesTab.swift; sourceTree = "<group>"; };
 		F650883A247F364A00939DAF /* TicketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketView.swift; sourceTree = "<group>"; };
-		F657675824C26FFB007E8AFB /* UpdateCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCard.swift; sourceTree = "<group>"; };
 		F65BD5FB24B135000075AF27 /* CalendarDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDetails.swift; sourceTree = "<group>"; };
 		F669B764238B908A00819E52 /* ScheduleTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTab.swift; sourceTree = "<group>"; };
 		F669B767238B97B500819E52 /* ScheduleDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleDetails.swift; sourceTree = "<group>"; };
@@ -143,7 +135,6 @@
 		F6D256EF238B1B3E009840CC /* STMCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STMCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6D256FA238B1B3F009840CC /* STMCUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STMCUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6E9AB9924E8A5FC00B3526B /* HouseDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseDetails.swift; sourceTree = "<group>"; };
-		F6E9AB9D24E9CF7000B3526B /* AdvisoryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisoryCard.swift; sourceTree = "<group>"; };
 		F6E9AB9F24E9F64000B3526B /* PointsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointsCard.swift; sourceTree = "<group>"; };
 		F6F2604F24EDD59500087A8F /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		F6F2605524EF3F3900087A8F /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,7 +152,6 @@
 		F6F2607E24F0A24200087A8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F6F2608E24F1959800087A8F /* BulletinCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinCard.swift; sourceTree = "<group>"; };
 		F6F2609224F1E02500087A8F /* BulletinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinView.swift; sourceTree = "<group>"; };
-		F6F2609424F36A4A00087A8F /* SocialCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,8 +246,6 @@
 				F6F2606724EF691400087A8F /* UserInfoView.swift */,
 				F6F2606B24F04B1600087A8F /* LockerView.swift */,
 				F6F2606D24F0543400087A8F /* RoomView.swift */,
-				F62E7DF425474C9900773A95 /* CourseView.swift */,
-				F62E7DFB25476AFA00773A95 /* CourseDetails.swift */,
 			);
 			path = InternalViews;
 			sourceTree = "<group>";
@@ -267,11 +255,8 @@
 			children = (
 				F669B76A23933F6E00819E52 /* ScheduleCard.swift */,
 				F6178F882461C36500600557 /* HouseCard.swift */,
-				F657675824C26FFB007E8AFB /* UpdateCard.swift */,
-				F6E9AB9D24E9CF7000B3526B /* AdvisoryCard.swift */,
 				F6E9AB9F24E9F64000B3526B /* PointsCard.swift */,
 				F6F2608E24F1959800087A8F /* BulletinCard.swift */,
-				F6F2609424F36A4A00087A8F /* SocialCard.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -574,23 +559,18 @@
 				F686735823947F0600CC0F72 /* CalendarView.swift in Sources */,
 				F6508837247D8C0B00939DAF /* ResourcesTab.swift in Sources */,
 				F669B765238B908A00819E52 /* ScheduleTab.swift in Sources */,
-				F6F2609524F36A4C00087A8F /* SocialCard.swift in Sources */,
 				F6F2608F24F1959800087A8F /* BulletinCard.swift in Sources */,
 				F6F2605024EDD59500087A8F /* MainView.swift in Sources */,
 				F61C93D52572EDFD00F0679E /* NotificationTab.swift in Sources */,
 				F6E9ABA024E9F64000B3526B /* PointsCard.swift in Sources */,
 				F669B768238B97B500819E52 /* ScheduleDetails.swift in Sources */,
 				F6D256DD238B1B3C009840CC /* AppDelegate.swift in Sources */,
-				F6E9AB9E24E9CF7000B3526B /* AdvisoryCard.swift in Sources */,
 				F650883B247F364A00939DAF /* TicketView.swift in Sources */,
 				F6E9AB9A24E8A5FC00B3526B /* HouseDetails.swift in Sources */,
 				F6178F87246119C800600557 /* ExploreTab.swift in Sources */,
 				F669B76B23933F6E00819E52 /* ScheduleCard.swift in Sources */,
-				F62E7DFC25476AFA00773A95 /* CourseDetails.swift in Sources */,
-				F657675924C26FFE007E8AFB /* UpdateCard.swift in Sources */,
 				F6D256DF238B1B3C009840CC /* SceneDelegate.swift in Sources */,
 				F6F2606C24F04B1600087A8F /* LockerView.swift in Sources */,
-				F62E7DF525474C9900773A95 /* CourseView.swift in Sources */,
 				F6178F892461C36500600557 /* HouseCard.swift in Sources */,
 				F6D256E1238B1B3C009840CC /* ContentView.swift in Sources */,
 				F6F2606E24F0543400087A8F /* RoomView.swift in Sources */,

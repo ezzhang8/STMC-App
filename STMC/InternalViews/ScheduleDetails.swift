@@ -335,7 +335,7 @@ private class ScheduleOverride: ObservableObject {
         self.schedule(schedule: schedule, seniority: seniority)
     }
     func schedule(schedule: Schedule, seniority: String) {
-        sendRequest(url: String(API.url+"overrides.php"), completion: { json in
+        sendRequest(url: String(API.url+"overrides/"), completion: { json in
             let error = json["error"].string
 
             if error != nil {

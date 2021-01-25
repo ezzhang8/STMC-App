@@ -78,9 +78,7 @@ class NotificationLog: ObservableObject {
     
     func addArray(array: [Notification]) {
         self.notifications = array
-        
-        print("add??")
-                 
+                         
         for notification in self.notifications {
             if (!self.readContainer.contains(notification.id)) {
                 self.readContainer.append(notification.id)
@@ -100,9 +98,6 @@ class NotificationLog: ObservableObject {
 //            }
             
             self.badgeValue = nil
-//
-            print("add????")
-
         }
     }
     
