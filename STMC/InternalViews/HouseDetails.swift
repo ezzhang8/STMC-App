@@ -9,111 +9,162 @@
 import SwiftUI
 import SwiftyJSON
 
-struct HouseDetails: View {
+struct HouseDetails : View {
     @Environment(\.presentationMode) private var presentationMode
+
     @GestureState private var dragOffset = CGSize.zero
-    @State private var selectorIndex: Int = 0
+    
     var house: House
     
-    var body: some View {
-        ScrollView(.vertical, showsIndicators: false, content: {
-            GeometryReader{reader in
-                if reader.frame(in: .global).minY > -280 {
-                    Image(house.houseName + "-bg")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .offset(y: -reader.frame(in: .global).minY)
-                        .frame(width: UIScreen.main.bounds.width, height:  reader.frame(in: .global).minY > 0 ? reader.frame(in: .global).minY + 360 : 360)
-                }
-               
-            }
-            .frame(height: 300)
-                
-            VStack (alignment: .leading){
-                VStack(alignment: .center) {
-                    Image(house.houseName)
-                        .resizable()
-                        .frame(width: 256, height: 256)
-                        .shadow(radius: 8)
-                    Text(house.houseName)
-                        .font(.system(size: 35, weight: .bold))
-                    
-                    Text(String(house.points)+" pts.")
-                        .font(.headline)
-                    
-                    //Picker(selection:$selectorIndex, label: Text("Picker")) {
-                        //Text("Advisories").tag(0)
-                       // Text("Points").tag(0)
-                    //}
-                    //.padding(.horizontal, 25)
-                    //.padding(.vertical)
-                    //.pickerStyle(SegmentedPickerStyle())
-                    
-                    
-                 
-                        PointsView(idHouse: house.id)
-                    
-                }
-            }
-            .padding(.top, 50)
-            .frame(width: UIScreen.main.bounds.width)
-            //.background(Blur(style: .systemThinMaterial))
-
-            .background(Color.GR)
-            .cornerRadius(20)
-            .offset(y: -72)
-        })
-        
-        .background(Color.GR.edgesIgnoringSafeArea(.all))
-        .edgesIgnoringSafeArea(.all)
-    }
-}
-
-struct AdvisoriesView: View {
-    var idHouse: Int
-    @ObservedObject fileprivate var advisories: Advisories
-    
-    init(idHouse: Int) {
-        advisories = Advisories(idHouse: idHouse)
-        self.idHouse = idHouse
-    }
-    
-    var body: some View {
-        VStack {
-            ForEach(advisories.data, id: \.self) { i in
-                AdvisoryCard(advisoryId: String(i.id), room: i.room, teachers: i.teachers)
-            }
-        }
-    }
-}
-
-struct PointsView: View {
-    var idHouse: Int
     @ObservedObject fileprivate var points: Points
+    @State var time = Timer.publish(every: 0.1, on: .current, in: .tracking).autoconnect()
+    @State var show = false
     
-    init(idHouse: Int) {
-        points = Points(idHouse: idHouse)
-        self.idHouse = idHouse
+    init(house: House) {
+        self.house = house
+        self.points = Points(idHouse: house.id)
     }
+    
     var body: some View {
-        VStack {
-            ForEach(points.data, id: \.self) { i in
-                PointsCard(points: i.points, date: i.date, action: i.action)
+        ZStack(alignment: .top, content: {
+            ScrollView(.vertical, showsIndicators: false, content: {
+                VStack {
+                    GeometryReader { g in
+                        ZStack {
+                            if g.frame(in: .global).minY > -500 {
+                                Image(house.houseName + "-bg")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: UIScreen.main.bounds.width, height:  360)
+                                    .onReceive(self.time) { (_) in
+                                        let y = g.frame(in: .global).minY
+                                        
+                                        if -y > (UIScreen.main.bounds.height / 2.2) - 50{
+                                            withAnimation {
+                                                self.show = true
+                                            }
+                                        }
+                                        else {
+                                            withAnimation () {
+                                                self.show = false
+                                            }
+                                        }
+                                    }
+                            }
+                            Image(house.houseName)
+                                .resizable()
+                                .frame(width: 200, height: 200)
+                                .shadow(radius: 8)
+                                .offset(y:-10)
+                        }
+                    }
+                    .frame(height: 300)
+                    VStack (alignment: .leading){
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "star.circle.fill")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundColor(Color.primary)
+                                    .padding(.leading)
+                                Text("Points")
+                                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                            }
+                            
+                            VStack(spacing: 10) {
+                                ForEach(points.data, id: \.self) { i in
+                                    PointsCard(entry: i, houseName: house.houseName)
+                                }
+                            }
+                            Spacer()
+                                .frame(minHeight: 20, maxHeight: 50)
+                        }
+                    }
+                    .padding(.top, 20)
+                    .frame(width: UIScreen.main.bounds.width)
+                    .background(Color.GR)
+                    .cornerRadius(20)
+                    .offset(y: -25)
+
+                        
+                }
+            })
+            if self.show {
+                HStack {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(alignment: .center){
+                            Button(action: {
+                                self.presentationMode.wrappedValue.dismiss()
+                            }) {
+                                HStack {
+                                    Image(systemName: "chevron.left.circle.fill")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                }
+                            }
+                            .accentColor(houseColors[house.houseName])
+                            .padding(.leading, 15)
+                            Image(house.houseName)
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            
+                        }
+                    }
+                    Text(house.houseName)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+                        .multilineTextAlignment(.leading)
+                    Spacer(minLength: 0)
+                    Text(String(house.points) + " pts.")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 8)
+                        .background(LinearGradient(gradient: houseGradient[house.houseName] ?? houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading))
+                        .clipShape(Capsule())
+                }
+                .padding(.top, UIApplication.shared.windows.first?.safeAreaInsets.top == 0 ? 15 : (UIApplication.shared.windows.first?.safeAreaInsets.top)! + 5)
+                .padding(.trailing)
+                .padding(.bottom)
+                .background(BlurBG())
             }
-        }
+        })
+        .edgesIgnoringSafeArea(.top)
+        .navigationBarHidden(true)
+        .background(Color.GR.edgesIgnoringSafeArea(.all))
+        .navigationBarBackButtonHidden(true)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
-
-private struct Advisory: Identifiable, Hashable {
-    var id: Int
-    var room: String
-    var teachers: String
+struct BlurBG : UIViewRepresentable {
+    func makeUIView(context: Context) -> UIVisualEffectView{
+        let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+        
+        return view
+    }
+    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {}
 }
 
-private struct PointEntry: Hashable, Codable {
-    var action: String
-    var date: String
-    var points: Int
+struct PointEntry: Hashable, Codable {
+    let action: String
+    let date: String
+    let points: Int
+    let dateFull: String
+    let approvedBy: String
+
+
+}
+
+extension UINavigationController: UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self
+    }
+
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
+    }
 }
 
 private class Points: ObservableObject {
@@ -124,8 +175,8 @@ private class Points: ObservableObject {
             let error = json["error"].string
 
             if error != nil {
-                DispatchQueue.main.async {
-                    if let cachedData = UserDefaults.standard.data(forKey: "PointsData"+String(idHouse)) {
+                if let cachedData = UserDefaults.standard.data(forKey: "PointsData"+String(idHouse)) {
+                    DispatchQueue.main.async {
                         self.data = try! PropertyListDecoder().decode([PointEntry].self, from: cachedData)
                     }
                 }
@@ -138,11 +189,10 @@ private class Points: ObservableObject {
                 let date = entry["date"].stringValue.prefix(10)
                 let action = entry["action"].stringValue
                 let points = entry["points"].intValue
+                let dateFull = entry["date"].stringValue
+                let approvedBy = entry["approvedBy"].stringValue
                 
-                pointContainer.append(PointEntry(action: action, date: String(date), points: points))
-                
-                
-
+                pointContainer.append(PointEntry(action: action, date: String(date), points: points, dateFull: dateFull, approvedBy: approvedBy))
             }
             DispatchQueue.main.async {
                 self.data = pointContainer
@@ -154,59 +204,3 @@ private class Points: ObservableObject {
     }
 }
 
-private class Advisories: ObservableObject {
-    @Published var data = [Advisory]()
-    
-    init(idHouse: Int) {
-        sendRequest(url: String(API.url+"advisories/"), completion: { json in
-            let advisories = json.array!
-            
-            for advisory in advisories {
-                var advisoryId = advisory["advisoryId"].intValue
-                
-                // Ignore the advisories not part of this house.
-                if advisoryId > 10*idHouse && advisoryId < 10*idHouse + 10 {
-                    let roomNumber = String(advisory["roomNumber"].intValue)
-                    let teachers = [advisory["teacher1"].stringValue, advisory["teacher2"].stringValue, advisory["teacher3"].stringValue]
-                    // Replace certain integer codes with room names.
-                    let roomReplacements = [
-                        "100": "Gym",
-                        "150": "Cafeteria",
-                        "200": "Multipurpose Room",
-                        "201": "Library"
-                    ]
-                    var teacherString: String = ""
-                    var roomString: String
-                    
-                    if roomReplacements[roomNumber] != nil {
-                        roomString = roomReplacements[roomNumber] ?? "Error"
-                    }
-                    else {
-                        roomString = "Room "+String(roomNumber)
-                    }
-                    // Subtract 10 times the house id to retrieve the advisory number that the user will understand.
-                    advisoryId = advisoryId - (10*idHouse)
-                    
-                    // For each teacher in the array, generate a string that separates their names by a comma.
-                    for teacher in teachers {
-                        if teacher != "" && teacherString == "" {
-                            teacherString += teacher
-                        }
-                        else if teacher != "" && teacherString != "" {
-                            teacherString += ", " + teacher
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self.data.append(Advisory(id: advisoryId, room: roomString, teachers: teacherString))
-                    }
-                }
-            }
-        })
-    }
-}
-
-struct HouseDetails_Previews: PreviewProvider {
-    static var previews: some View {
-        HouseDetails(house: House(id: 1, houseName: "Canterbury", points: 32))
-    }
-}

@@ -26,11 +26,13 @@ struct CalendarDetails: View {
                 HStack {
                     Image(systemName: "pencil.and.outline")
                         .resizable()
-                        .frame(width: 15, height: 15)
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color.primary)
                     Text(CalendarEvent?.summary ?? "Error")
-                        .font(.callout)
+                        .font(.system(.title3, design: .rounded))
                         .fontWeight(.bold)
                         .textCase(.none)
+                        .foregroundColor(Color.primary)
                 }
             ){
                 HStack {
@@ -58,12 +60,14 @@ struct CalendarDetails: View {
                 Section (header:
                     HStack {
                         Image(systemName: "square.and.pencil")
-                        .resizable()
-                        .frame(width: 15, height: 15)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(Color.primary)
                         Text("Description")
-                            .font(.callout)
+                            .font(.system(.title3, design: .rounded))
                             .fontWeight(.bold)
                             .textCase(.none)
+                            .foregroundColor(Color.primary)
                     }
                 ){
                     HStack {
@@ -81,12 +85,14 @@ struct CalendarDetails: View {
             Section (header:
                 HStack {
                     Image(systemName: "paperplane")
-                    .resizable()
-                    .frame(width: 15, height: 15)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color.primary)
                     Text("Actions")
-                        .font(.callout)
+                        .font(.system(.title3, design: .rounded))
                         .fontWeight(.bold)
                         .textCase(.none)
+                        .foregroundColor(Color.primary)
                         
                 }
             ){
@@ -107,7 +113,7 @@ struct CalendarDetails: View {
                     openURL(URL(string: CalendarEvent!.htmlLink)!)
                 }) {
                     HStack {
-                        Text("Open in Safari")
+                        Text("Open in Browser")
                         Spacer()
                         Image(systemName: "safari")
                     }

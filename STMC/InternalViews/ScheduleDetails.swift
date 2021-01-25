@@ -13,11 +13,17 @@ struct ScheduleDetails: View {
     var schedule: Schedule
     var seniority: String
     @ObservedObject fileprivate var CalendarEvents: CalendarEvents
+    @ObservedObject fileprivate var Override: ScheduleOverride
+
+    @State var seniorJunior: String
     
     init(schedule: Schedule, seniority: String) {
         self.schedule = schedule
-        self.seniority = seniority
         self.CalendarEvents = STMC.CalendarEvents(dateString: schedule.startDate)
+        self.seniority = seniority
+        self._seniorJunior = State(initialValue: seniority )
+        self.Override = ScheduleOverride(schedule: schedule, seniority: seniority)
+
     }
     
     var body: some View {
@@ -26,43 +32,74 @@ struct ScheduleDetails: View {
                 HStack {
                     Image(systemName: "square.grid.2x2")
                         .resizable()
-                        .frame(width: 15, height: 15)
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color.primary)
                     Text("Block Rotation")
-                        .font(.callout)
+                        .font(.system(.title3, design: .rounded))
+                        .fontWeight(.bold)
                         .textCase(.none)
+                        .foregroundColor(Color.primary)
                 }
             ){
                 HStack(alignment: .center) {
                     Spacer()
                     VStack {
-                        Text(determineDay(blockSchedule: schedule.summary) + " - " + schedule.scheduleFamily)
-                            .font(.headline)
-                            .padding(.top)
+                        HStack {
+                            Text(determineDay(blockSchedule: schedule.summary))
+                                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                                .padding(.vertical, 2)
+                                .padding(.horizontal, 5)
+                            Image(systemName:"chevron.right.2")
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                            Text(schedule.scheduleFamily)
+                                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                                .padding(.vertical, 2)
+                                .padding(.horizontal, 5)
+
+                        }
+                        .padding(.top, 5)
                         Text(schedule.summary)
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom)
+                            .font(.system(size: 32, weight: .heavy, design: .rounded))
+                            .padding(.vertical, 1)
+                            .foregroundColor(colorMatch(scheduleType: schedule.scheduleType))
+                        
+                        Text(schedule.scheduleType)
+                            .font(.system(size: 18, weight: .semibold, design: .rounded))
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 5)
+
+                        
                     }
                     Spacer()
                 }
             }
             Section (header:
-                HStack {
-                    Image(systemName: "clock")
-                        .resizable()
-                        .frame(width: 15, height: 15)
-                    Text(schedule.scheduleType)
-                        .font(.callout)
-                        .textCase(.none)
+                VStack (alignment: .leading){
+                    HStack {
+                        Picker(selection:$seniorJunior, label: Text("Picker")) {
+                            Text("Senior Schedule")
+                                .tag("SR")
+                                .textCase(.none)
+                            Text("Junior Schedule")
+                                .tag("JR")
+                                .textCase(.none)
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.bottom, 5)
+                        .pickerStyle(SegmentedPickerStyle())
+                        
+                    }
                 }
             ){
-                ForEach(generateSchedule(scheduleType: String("\(schedule.scheduleType) \(seniority)"), blocks: schedule.summary)!, id: \.self) { i in
-                    HStack {
-                        Text(i[0])
-                            .fontWeight(.semibold)
-                        Spacer()
-                        Text(i[1])
+                ForEach(generateSchedule(scheduleType: String("\(schedule.scheduleType) \(seniorJunior)"), blocks: schedule.summary) ?? Override.returnArray[seniorJunior]!, id: \.self) { i in
+                    VStack {
+                        HStack {
+                            Text(i[0])
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(i[1])
+                        }
                     }
                 }
             }
@@ -71,18 +108,20 @@ struct ScheduleDetails: View {
                     HStack {
                         Image(systemName: "calendar")
                             .resizable()
-                            .frame(width: 15, height: 15)
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(Color.primary)
                         Text("Events")
-                            .font(.callout)
+                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.bold)
                             .textCase(.none)
+                            .foregroundColor(Color.primary)
                     }
                 ){
-                        ForEach(CalendarEvents.events, id: \.self) { event in
-                            NavigationLink(destination: CalendarDetails(CalendarEvent: event!)) {
-                                Text(event!.summary)
-                            }
+                    ForEach(CalendarEvents.events, id: \.self) { event in
+                        NavigationLink(destination: CalendarDetails(CalendarEvent: event!)) {
+                            Text(event!.summary)
                         }
-                    
+                    }
                 }
             }
             
@@ -99,18 +138,14 @@ func formatDate (dateString: String) -> String {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
         let date = dateFormatter.date(from: dateString)
-        
         let month = String((dateFormatter.monthSymbols?[Calendar.current.component(.month, from: date!)-1])!)
-        
         var day = String(dateString.suffix(2))
         
         if day.hasPrefix("0") {
             day = String(dateString.suffix(1))
         }
-        
+    
         return String("\(month) \(day)")
-
-
     }
     else {
         return " "
@@ -165,7 +200,6 @@ private class CalendarEvents: ObservableObject {
                     self.events.append(nil)
                 }
             }
-            
             if let cachedArray = try? PropertyListEncoder().encode(self.events) {
                 UserDefaults.standard.set(cachedArray, forKey: "ScheduleDetailsCalendarFor"+dateString)
             }
@@ -193,7 +227,7 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
         ["Block \(blockArray[1])", "9:50-11:05"],
         ["Sr. School Break", "11:05-11:15"],
         ["Block \(blockArray[2])", "11:20-12:35"],
-        ["Lunch", "12:35-1:10"],
+        ["Sr. School Lunch", "12:35-1:10"],
         ["Block \(blockArray[3])", "1:15-2:30"],
         ["Afternoon Y Blocks", "2:35-3:50"]
     ]
@@ -203,7 +237,7 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
         ["Block \(blockArray[0])", "8:25-9:45"],
         ["Jr. School Break", "9:45-9:55"],
         ["Block \(blockArray[1])", "10:00-11:15"],
-        ["Lunch", "11;15-11:50"],
+        ["Jr. School Lunch", "11:15-11:50"],
         ["Block \(blockArray[2])", "11:55-1:10"],
         ["Block \(blockArray[3])", "1:15-2:30"],
         ["Afternoon Y Blocks", "2:35-3:50"]
@@ -258,11 +292,7 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
         ["Compass Time", "1:50-2:30"],
         ["Afternoon Y Blocks", "2:35-3:50"]
     ]
-    
-    scheduleArray["PLC/ Staff Meeting/ Compass Schedule JR"] = scheduleArray["PLC/ Staff Meetings/ Compass Schedule JR"]
-    
-    scheduleArray["PLC/ Staff Meeting/ Compass Schedule SR"] = scheduleArray["PLC/ Staff Meetings/ Compass Schedule SR"]
-    
+        
     scheduleArray["Mass Schedule SR"] = [
         ["Morning X Blocks", "7:00-8:15"],
         ["Warning Bell", "8:20"],
@@ -287,16 +317,64 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
         ["Afternoon Y Blocks", "2:35-3:50"]
     ]
     
-    scheduleArray["Default"] = [
-        ["Notice:", "No schedule is available for this day in app. Check if a schedule is available by opening the day's event in Safari."]
-    ]
-    
     if scheduleArray[scheduleType] != nil {
         return scheduleArray[scheduleType] as? [[String]]
     }
     else {
-        return scheduleArray["Default"] as? [[String]]
+        return nil
     }
 }
 
+private class ScheduleOverride: ObservableObject {
+    @Published var returnArray = [
+        "JR": [[String]](),
+        "SR": [[String]](),
+    ]
+    
+    init(schedule: Schedule, seniority: String) {
+        self.schedule(schedule: schedule, seniority: seniority)
+    }
+    func schedule(schedule: Schedule, seniority: String) {
+        sendRequest(url: String(API.url+"overrides.php"), completion: { json in
+            let error = json["error"].string
 
+            if error != nil {
+                self.loadScheduleFromCache(date: schedule.startDate)
+                return
+            }
+            
+            let array = json.array!
+            
+            for day in array {
+                let date = day["date"].stringValue
+                let scheduleJr = day["scheduleJr"].array!
+                let scheduleSr = day["scheduleSr"].array!
+
+                if date == schedule.startDate {
+                    for row in scheduleJr {
+                        let entry = [row["name"].stringValue, row["timeSlot"].stringValue]
+                        DispatchQueue.main.async {
+                            self.returnArray["JR"]!.append(entry)
+                        }
+                    }
+                
+                    for row in scheduleSr {
+                        let entry = [row["name"].stringValue, row["timeSlot"].stringValue]
+                        DispatchQueue.main.async {
+                            self.returnArray["SR"]!.append(entry)
+                            
+                            if let cachedArray = try? PropertyListEncoder().encode(self.returnArray) {
+                                UserDefaults.standard.set(cachedArray, forKey: "ScheduleFor"+date)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+    func loadScheduleFromCache(date: String) {
+        if let cachedData = UserDefaults.standard.data(forKey: "ScheduleFor"+date) {
+            self.returnArray = try! PropertyListDecoder().decode([String: [[String]]].self, from: cachedData)
+        }
+    }
+}

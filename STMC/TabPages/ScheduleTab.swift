@@ -6,26 +6,27 @@
 //  Copyright © 2019 Eric Zhang. All rights reserved.
 //
 
+import Combine
 import SwiftUI
 import SwiftyJSON
 
 struct ScheduleTab: View {
     @EnvironmentObject var userStatus: Profile
     @State var showingCalendar = false
-    @ObservedObject private var ScheduleArray = Schedules()
-    
+    @StateObject private var ScheduleArray = Schedules()
+    @State private var isShowing = false
+
     var body: some View {
         NavigationView {
             ScrollView {
                 Divider()
                 VStack(alignment: .leading) {
-
                     Section (header:
                         HStack {
                             Image(systemName: "arrow.right.circle")
                                 .resizable()
                                 .frame(width: 20, height: 20)
-                            Text("Next")
+                            Text(determineInitialLabelText(schedule: ScheduleArray.data))
                                 .font(.title3)
                                 .fontWeight(.bold)
 
@@ -46,6 +47,9 @@ struct ScheduleTab: View {
                             if index == 0 {
                                 ScheduleCard(schedule: schedule, seniority: determineSeniority(userStatus: userStatus))
                             }
+                        }
+                        .onAppear {
+                            ScheduleArray.override()
                         }
                 }
                 .padding(.top, 2.0)
@@ -71,17 +75,20 @@ struct ScheduleTab: View {
                                     .progressViewStyle(CircularProgressViewStyle())
                                     .frame(width: 50, height: 50)
                                 Spacer()
-
                             }
                         }
-                        ForEach(Array(ScheduleArray.data.enumerated()), id: \.element) { index, schedule in
+                        ForEach(0..<ScheduleArray.data.count, id: \.self) { index in
                             if index > 0 {
-                                ScheduleCard(schedule: schedule, seniority: determineSeniority(userStatus: userStatus))
+                                ScheduleCard(schedule: ScheduleArray.data[index], seniority: determineSeniority(userStatus: userStatus))
                             }
-                            
                         }
+                        
                         Spacer()
                     }
+                    .onAppear {
+                        ScheduleArray.override()
+                    }
+
                 }
             }
             .navigationBarTitle(Text("Schedule"))
@@ -93,46 +100,114 @@ struct ScheduleTab: View {
                         .resizable()
                         .accentColor(.STMC)
                         .frame(width: 25, height: 25)
-
                 }
                 .frame(width: 25, height: 45)
                 .sheet(isPresented: $showingCalendar) {
                     CalendarView()
                 })
-                
             }
             .background(Color.GR.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+            .onAppear {
+                if (ScheduleArray.cacheDate() == false) {
+                    ScheduleArray.load()
+                }
+            }
+            
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            if (ScheduleArray.cacheDate() == false) {
+                ScheduleArray.load()
+            }
         }
     }
 }
 
+func determineInitialLabelText(schedule: [Schedule]) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "YYYY-MM-dd"
+    
+    let date = Date()
+    
+    if schedule.count > 0 && schedule[0].startDate == dateFormatter.string(from: date) {
+        return "Today"
+    }
+    else {
+        return "Next"
+    }
+}
+
+
 private class Schedules: ObservableObject {
     @Published var data = [Schedule]()
-
+        
+    let UD = UserDefaults.standard
     var scheduleData = [Schedule]()
     init() {
+//        DispatchQueue.main.async {
+//            self.data = [Schedule]()
+//            self.scheduleData = [Schedule]()
+//        }
+        self.load()
+    }
+    
+    func override() {
+        sendRequest(url: String(API.url+"overrides.php"), completion: { json in
+            let error = json["error"].string
+
+            if error != nil {
+                return
+            }
+            
+            let array = json.array!
+            
+            for day in array {
+                let date = day["date"].stringValue
+                let blockRotation = day["blockRotation"].stringValue
+                let scheduleType = day["scheduleType"].stringValue
+                let scheduleFamily = day["scheduleFamily"].stringValue
+                let index = self.data.firstIndex{$0.startDate == date}
+                
+                DispatchQueue.main.async {
+                    if index != nil {
+                        let id = self.data[index!].id
+                        let dotw = self.data[index!].dotw
+                        
+                        self.data[index!] = Schedule(id: id, summary: blockRotation, dotw: dotw, startDate: date, scheduleType: scheduleType, scheduleFamily: scheduleFamily)
+                        if let cachedArray = try? PropertyListEncoder().encode(self.data) {
+                            self.UD.set(cachedArray, forKey: "ScheduleData")
+                            print("tttt")
+                        }
+                    }
+                }
+                
+            }
+            
+        })
+        
+    }
+    func load() {
+        print("testload")
+//        DispatchQueue.main.async {
+//            self.data = [Schedule]()
+//            self.scheduleData = [Schedule]()
+//
+//        }
         sendRequest(url: API.calendar, completion: { json in
             let error = json["error"].string
 
-            if error == "The Internet connection appears to be offline." {
-                DispatchQueue.main.async {
-                    if let cachedData = UserDefaults.standard.data(forKey: "ScheduleData") {
-                        self.data = try! PropertyListDecoder().decode([Schedule].self, from: cachedData)
-                    }
-                }
-                return
-            }
-            else if error != nil {
+            if error != nil {
+                self.loadEventsFromCache()
                 return
             }
             let items = json["items"].array!
             
+            UserDefaults.standard.removeObject(forKey: "ScheduleData")
+
             for item in items {
                 let summary = item["summary"].stringValue
                 let id = item["id"].stringValue
                 let startDate = item["start"]["date"].string
-                
-                
+                                
                 if startDate != nil && summary.hasPrefix("MORE - ") || summary.hasPrefix("RICE - ") {
                     var dotw: String
                     
@@ -148,15 +223,54 @@ private class Schedules: ObservableObject {
                 }
             }
             DispatchQueue.main.async {
+                self.setCacheDate()
+
                 if let cachedArray = try? PropertyListEncoder().encode(self.scheduleData) {
-                    UserDefaults.standard.set(cachedArray, forKey: "ScheduleData")
+                    self.UD.set(cachedArray, forKey: "ScheduleData")
                 }
                 self.data = self.scheduleData
-            }
-            
+                self.scheduleData = [Schedule]()
+            }            
         })
         
-}
+        
+    }
+    func setCacheDate() {
+        let date = Date()
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+        
+        UD.set("\(month)-\(day)", forKey: "ScheduleCacheDate")
+    }
+    
+    func loadEventsFromCache() {
+        print("ok")
+        DispatchQueue.main.async {
+            self.data = [Schedule]()
+            self.scheduleData = [Schedule]()
+            
+            if let cachedData = self.UD.data(forKey: "ScheduleData") {
+                self.data = try! PropertyListDecoder().decode([Schedule].self, from: cachedData)
+            }
+        }
+       
+
+    }
+   func cacheDate() -> Bool {
+        let date = Date()
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
+        let day = calendar.component(.day, from: date)
+
+        if let cachedData = UD.object(forKey: "ScheduleCacheDate") as? String {
+            if cachedData == "\(month)-\(day)" {
+                return true
+            }
+        }
+        return false
+    }
+    
     private func dayFromDateString(dateString: String) -> String{
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en-US")
@@ -171,12 +285,11 @@ private class Schedules: ObservableObject {
 }
 
 private func determineSeniority(userStatus: Profile) -> String {
-    if (userStatus.user?.profile.email.contains("2021") == true ||
-        userStatus.user?.profile.email.contains("2022") == true ||
-        userStatus.user?.profile.email.contains("2023") == true) {
-        return "SR"
+    if (userStatus.user?.profile.email.contains("2024") == true ||
+        userStatus.user?.profile.email.contains("2025") == true) {
+        return "JR"
     }
-    return "JR"
+    return "SR"
 }
 
 struct Schedule: Identifiable, Hashable, Codable {
@@ -186,10 +299,4 @@ struct Schedule: Identifiable, Hashable, Codable {
     var startDate: String
     var scheduleType: String
     var scheduleFamily: String
-}
-
-struct ScheduleTab_Previews: PreviewProvider {
-    static var previews: some View {
-        ScheduleTab()
-    }
 }

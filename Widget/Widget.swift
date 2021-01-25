@@ -110,8 +110,6 @@ struct Provider: TimelineProvider {
                     else {
                         scheduleData.append(Schedule(date: date, id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule", scheduleFamily: scheduleComponents[0]))
                     }
-                    
-                    
                 }
             }
             

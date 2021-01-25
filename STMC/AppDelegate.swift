@@ -70,6 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             }
             else {
                 print("\(error.localizedDescription)")
+                GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+
             }
             return
         }

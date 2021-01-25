@@ -9,45 +9,78 @@
 import SwiftUI
 
 struct PointsCard: View {
-    var points: Int
-    var date: String
-    var action: String
+    @State var showDetails = false
+    
+    var entry: PointEntry
+    var houseName: String
     
     var body: some View {
-        ZStack(alignment: .leading) {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(
-                    LinearGradient(gradient: houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading)
-                )
-                .frame(height: 60)
-                
-            VStack {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(action)
-                            .font(.system(size: 18, weight: .semibold))
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                        Text(date)
-                            .font(.system(size: 14, weight: .medium))
-                    }
-                    Spacer()
-                    Text("+"+String(points))
-                        .font(.system(size: 24, weight: .heavy))
-                }
-                .foregroundColor(.white)
-                .padding(.horizontal)
-                .frame(alignment: .center)
+        Button (action: {
+            self.showDetails.toggle()
+        }) {
                     
-            }
-        }
-        .padding(.horizontal)
-    }
-}
+                VStack {
+                    if showDetails == false {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(entry.action)
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                Text(entry.date)
+                                    .font(.system(size: 14, weight: .medium))
+                            }
+                            Spacer()
+                            Text("+"+String(entry.points))
+                                .font(.system(size: 24, weight: .heavy))
+                            
+                        }
+                        .foregroundColor(.white)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 15)
+                        .frame(alignment: .center)
+                    }
+                    else {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(entry.action)
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                Text(entry.dateFull)
+                                    .font(.system(size: 14, weight: .medium))
+                                
+                                HStack {
+                                    Text("Approved")
+                                        .font(.system(size: 14, weight: .medium))
+                                    Image(systemName: "checkmark.seal.fill")
+                                        .resizable()
+                                        .frame(width: 15, height: 15)
+                                }
+                                .frame (height: 15)
+                                
 
-struct PointsCard_Previews: PreviewProvider {
-    static var previews: some View {
-        PointsCard(points: 32, date: "2020-08-16", action: "Preview Placeholder")
-        
+                            }
+                            Spacer()
+                            Text("+"+String(entry.points))
+                                .font(.system(size: 24, weight: .heavy))
+                            
+                        }
+                        .foregroundColor(.white)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 15)
+                        .frame(alignment: .center)
+
+                    }
+                //}
+                
+            }
+            .background(LinearGradient(gradient: houseGradient[houseName] ?? houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .buttonStyle(ScaleButtonStyle())
+        .padding(.horizontal)
+        .frame(maxWidth: UIScreen.main.bounds.width)
+
     }
 }

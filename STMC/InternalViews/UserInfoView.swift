@@ -11,7 +11,7 @@ import GoogleSignIn
 
 struct UserInfoView: View {
     @EnvironmentObject var userStatus: Profile
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.presentationMode) var presentationMode
 
 
     var body: some View {
@@ -37,53 +37,7 @@ struct UserInfoView: View {
                     }
                     .padding(.vertical, 5)
                 }
-                Section(header:
-                    HStack {
-                        Image(systemName: "envelope")
-                            .resizable()
-                            .frame(width: 20, height: 15)
-                        Text("Contact")
-                            .font(.callout)
-                            .fontWeight(.bold)
-                            .textCase(.none)
-                    }
-                        
-                ){
-                    VStack (alignment: .leading){
-                        Text("St. Thomas More Collegiate")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                        
-                        Text("7450 12th Avenue")
-                        Text("Burnaby, BC V3N 2K1")
-                        
-                        
-                        
-                        
-                    }
-                    .padding(.vertical, 5)
-                    HStack {
-                        Image(systemName: "phone.fill")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                            .foregroundColor(.STMC)
-
-                        
-                        Link("604-521-1801", destination: URL(string: "tel:6045211801")!)
-                            .foregroundColor(.STMC)
-                        
-                    }
-                    HStack {
-                        Image(systemName: "safari")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                            .foregroundColor(.STMC)
-                        Link("stmc.bc.ca", destination: URL(string: "https://stmc.bc.ca")!)
-                            .foregroundColor(.STMC)
-                        
-                    }
-
-                }
+                
                 Section(header:
                     HStack {
                         Image(systemName: "info.circle")
@@ -126,13 +80,16 @@ struct UserInfoView: View {
                 
                 Button(action:{
                     self.presentationMode.wrappedValue.dismiss()
-                    GIDSignIn.sharedInstance().signOut()
-                    userStatus.clear()
-                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+
+                        GIDSignIn.sharedInstance().signOut()
+                        userStatus.clear()
+                    }
                 }) {
                     Text("Log Out")
                         .accentColor(.STMC)
                 }
+               
             }
             .listStyle(InsetGroupedListStyle())
             .navigationBarTitle(Text("My Account"))

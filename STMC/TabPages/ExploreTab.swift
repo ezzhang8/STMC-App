@@ -13,8 +13,10 @@ import GoogleSignIn
 struct ExploreTab: View {
     @EnvironmentObject var userStatus: Profile
 
-    @State private var showingUser: Bool = false
 
+    @State private var showingUser: Bool = false
+    @State private var showingCourses: Bool = false
+    
     @ObservedObject fileprivate var houses = Houses()
     @ObservedObject fileprivate var bulletins = Bulletins()
 
@@ -32,30 +34,37 @@ struct ExploreTab: View {
                                 .font(.title3)
                                 .fontWeight(.bold)
                             Spacer()
+                            Text(houses.getLead())
+                                .fontWeight(.semibold)
+                                .foregroundColor(houses.getLeadingHouseColor())
+                                .padding(.trailing)
                             
                         }
                         .padding(.leading)
                     ) {
                         ScrollView (.horizontal, showsIndicators: false){
-                            HStack(spacing: 10) {
-                                if (houses.houseData.count == 0) {
-                                    HStack {
-                                        Spacer()
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle())
-                                            .frame(width: 50, height: 50)
-                                        Spacer()
+                            VStack {
+                                HStack(spacing: 10) {
+                                    if (houses.houseData.count == 0) {
+                                        HStack {
+                                            Spacer()
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle())
+                                                .frame(width: 50, height: 50)
+                                            Spacer()
 
+                                        }
                                     }
+                                    ForEach(houses.houseData, id: \.self) { house in
+                                        HouseCard(house: house)
+                                    }
+                                    
+                                    Spacer()
+                                    .frame(width: 8)
                                 }
-                                ForEach(houses.houseData, id: \.self) { house in
-                                    HouseCard(house: house)
-                                }
+                                .padding([.leading, .bottom])
                                 
-                                Spacer()
-                                .frame(width: 8)
                             }
-                            .padding([.leading, .bottom])
                         }
                     }
                     Divider()
@@ -80,43 +89,31 @@ struct ExploreTab: View {
                                         BulletinCard(bulletin: bulletin)
                                     }
                                 }
-                               
+                                BulletinHouseCard(bulletin: Bulletin(id: 19389318, name: "This is a much longer title!", dateAdded: "2020-01-02", description: "This is a test description that is much much longer lorem ipsum lolo lflan fndsfn  fdf d fdjfdjfd fdfndjf djkf djkf djk", imageLink: nil, webLink: "https://google.com", house: "Canterbury"))
 
                             }
                             .padding([.horizontal, .bottom])
                         }
                     }
-                
-                Divider()
-                Section(header:
-                    HStack {
-                        Image(systemName: "app.badge")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                        Text("Social Media")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                        
-                    }
-                    .padding(.leading)
-                ) {
-                    ScrollView (.horizontal, showsIndicators: false) {
-                        HStack(spacing: 10) {
-                            SocialCard(imageName: "Instagram", link: "https://instagram.com/stmcknights")
-                            SocialCard(imageName: "Twitter", link: "https://twitter.com/stmc/burnaby")
-                            SocialCard(imageName: "Facebook", link: "https://www.facebook.com/StThomasMoreCollegiate/")
-                            SocialCard(imageName: "STMC", link: "https://stthomasmorecollegiate.ca/news-media/")
-
+                    Divider()
+                    Section(header:
+                        HStack {
+                            Image(systemName: "doc.text.magnifyingglass")
+                                .resizable()
+                                .frame(width: 20, height: 25)
+                            Text("Find")
+                                .font(.title3)
+                                .fontWeight(.bold)
                             
                         }
-                        .padding([.horizontal, .bottom])
+                        .padding(.leading)
+                    ) {
+                    
                     }
-                }
             }
             .navigationBarTitle(Text("Explore"))
             .navigationBarItems(leading:
                 Button(action:{
-                    GIDSignIn.sharedInstance().signOut()
                     self.showingUser.toggle()
                 }) {
                     Image(systemName: "person.circle")
@@ -133,6 +130,7 @@ struct ExploreTab: View {
             }
             .background(Color.GR.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
         }
+        
     }
 }
 
@@ -148,8 +146,9 @@ struct Bulletin: Identifiable, Hashable {
     var name: String
     var dateAdded: String
     var description: String
-    var imageLink: String
-    var webLink: String
+    var imageLink: String?
+    var webLink: String?
+    var house: String?
 }
 
 private class Houses: ObservableObject {
@@ -159,17 +158,16 @@ private class Houses: ObservableObject {
         sendRequest(url: String(API.url+"houses/"), completion: { json in
             let error = json["error"].string
 
-            if error == "The Internet connection appears to be offline."  {
-                DispatchQueue.main.async {
-                    if let cachedData = UserDefaults.standard.data(forKey: "HouseData") {
+            if error != nil  {
+                if let cachedData = UserDefaults.standard.data(forKey: "HouseData") {
+                    DispatchQueue.main.async {
                         self.houseData = try! PropertyListDecoder().decode([House].self, from: cachedData)
                     }
                 }
                 return
             }
-            else if error != nil {
-                return
-            }
+            
+            
             let houseStandings = json.array!
             
             var houseContainer = [House]()
@@ -184,16 +182,27 @@ private class Houses: ObservableObject {
                     $0.points > $1.points
                 }
             }
-            
             DispatchQueue.main.async {
                 self.houseData = houseContainer
                 if let cachedArray = try? PropertyListEncoder().encode(houseContainer) {
                     UserDefaults.standard.set(cachedArray, forKey: "HouseData")
                 }
             }
-            
-          
         })
+    }
+    
+    func getLead() -> String {
+        if self.houseData.count > 2 {
+            return self.houseData[0].houseName + " +" + String(self.houseData[0].points - self.houseData[1].points) + " pts."
+        }
+        return ""
+    }
+    
+    func getLeadingHouseColor() -> Color {
+        if self.houseData.count > 2 {
+            return houseColors[self.houseData[0].houseName] ?? Color.STMC
+        }
+        return Color.STMC
     }
 }
 
@@ -207,7 +216,7 @@ private class Bulletins: ObservableObject {
             if error != nil {
                 return
             }
-            let bulletins = json.array!
+            let bulletins = json.array!.reversed()
             
             for bulletin in bulletins {
                 let id = bulletin["bulletinId"].intValue
@@ -222,14 +231,5 @@ private class Bulletins: ObservableObject {
                 }
             }
         })
-    }
-}
-
-
-
-
-struct ExploreTab_Previews: PreviewProvider {
-    static var previews: some View {
-        ExploreTab()
     }
 }

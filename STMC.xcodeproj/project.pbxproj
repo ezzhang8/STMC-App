@@ -14,10 +14,16 @@
 		F6178F8524606A1900600557 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = F6178F8424606A1900600557 /* SwiftyJSON */; };
 		F6178F87246119C800600557 /* ExploreTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6178F86246119C600600557 /* ExploreTab.swift */; };
 		F6178F892461C36500600557 /* HouseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6178F882461C36500600557 /* HouseCard.swift */; };
+		F61C93D52572EDFD00F0679E /* NotificationTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61C93D42572EDFC00F0679E /* NotificationTab.swift */; };
+		F61C940A2574139800F0679E /* StatefulTabView in Frameworks */ = {isa = PBXBuildFile; productRef = F61C94092574139800F0679E /* StatefulTabView */; };
+		F62E7DF525474C9900773A95 /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62E7DF425474C9900773A95 /* CourseView.swift */; };
+		F62E7DFC25476AFA00773A95 /* CourseDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62E7DFB25476AFA00773A95 /* CourseDetails.swift */; };
 		F6508837247D8C0B00939DAF /* ResourcesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6508836247D8C0B00939DAF /* ResourcesTab.swift */; };
 		F650883B247F364A00939DAF /* TicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F650883A247F364A00939DAF /* TicketView.swift */; };
 		F657675924C26FFE007E8AFB /* UpdateCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F657675824C26FFB007E8AFB /* UpdateCard.swift */; };
 		F65BD5FC24B135000075AF27 /* CalendarDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65BD5FB24B135000075AF27 /* CalendarDetails.swift */; };
+		F663760B25A157BF0068BA06 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F663760A25A157BF0068BA06 /* PartialSheet */; };
+		F663761325A3A53F0068BA06 /* SwiftUIRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = F663761225A3A53F0068BA06 /* SwiftUIRefresh */; };
 		F669B765238B908A00819E52 /* ScheduleTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669B764238B908A00819E52 /* ScheduleTab.swift */; };
 		F669B768238B97B500819E52 /* ScheduleDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669B767238B97B500819E52 /* ScheduleDetails.swift */; };
 		F669B76B23933F6E00819E52 /* ScheduleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669B76A23933F6E00819E52 /* ScheduleCard.swift */; };
@@ -114,6 +120,9 @@
 		F6099C5E2532655200E7A78C /* GuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestView.swift; sourceTree = "<group>"; };
 		F6178F86246119C600600557 /* ExploreTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTab.swift; sourceTree = "<group>"; };
 		F6178F882461C36500600557 /* HouseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseCard.swift; sourceTree = "<group>"; };
+		F61C93D42572EDFC00F0679E /* NotificationTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTab.swift; sourceTree = "<group>"; };
+		F62E7DF425474C9900773A95 /* CourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseView.swift; sourceTree = "<group>"; };
+		F62E7DFB25476AFA00773A95 /* CourseDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetails.swift; sourceTree = "<group>"; };
 		F6508836247D8C0B00939DAF /* ResourcesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesTab.swift; sourceTree = "<group>"; };
 		F650883A247F364A00939DAF /* TicketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketView.swift; sourceTree = "<group>"; };
 		F657675824C26FFB007E8AFB /* UpdateCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCard.swift; sourceTree = "<group>"; };
@@ -164,8 +173,11 @@
 				F6F2606324EF41AB00087A8F /* OneSignal in Frameworks */,
 				F6A8DD9924EDAB5E007ADC77 /* SystemConfiguration.framework in Frameworks */,
 				F6A8DD9724EDAB5C007ADC77 /* SafariServices.framework in Frameworks */,
+				F663760B25A157BF0068BA06 /* PartialSheet in Frameworks */,
+				F61C940A2574139800F0679E /* StatefulTabView in Frameworks */,
 				F6A8DD9524EDAB5B007ADC77 /* LocalAuthentication.framework in Frameworks */,
 				F606570924EDA275007FBBAF /* GoogleSignInDependencies.framework in Frameworks */,
+				F663761325A3A53F0068BA06 /* SwiftUIRefresh in Frameworks */,
 				F606570B24EDA276007FBBAF /* GoogleSignIn.framework in Frameworks */,
 				F6178F8524606A1900600557 /* SwiftyJSON in Frameworks */,
 			);
@@ -227,6 +239,7 @@
 				F669B764238B908A00819E52 /* ScheduleTab.swift */,
 				F6178F86246119C600600557 /* ExploreTab.swift */,
 				F6508836247D8C0B00939DAF /* ResourcesTab.swift */,
+				F61C93D42572EDFC00F0679E /* NotificationTab.swift */,
 			);
 			path = TabPages;
 			sourceTree = "<group>";
@@ -243,6 +256,8 @@
 				F6F2606724EF691400087A8F /* UserInfoView.swift */,
 				F6F2606B24F04B1600087A8F /* LockerView.swift */,
 				F6F2606D24F0543400087A8F /* RoomView.swift */,
+				F62E7DF425474C9900773A95 /* CourseView.swift */,
+				F62E7DFB25476AFA00773A95 /* CourseDetails.swift */,
 			);
 			path = InternalViews;
 			sourceTree = "<group>";
@@ -363,6 +378,9 @@
 			packageProductDependencies = (
 				F6178F8424606A1900600557 /* SwiftyJSON */,
 				F6F2606224EF41AB00087A8F /* OneSignal */,
+				F61C94092574139800F0679E /* StatefulTabView */,
+				F663760A25A157BF0068BA06 /* PartialSheet */,
+				F663761225A3A53F0068BA06 /* SwiftUIRefresh */,
 			);
 			productName = STMC;
 			productReference = F6D256D9238B1B3C009840CC /* STMC.app */;
@@ -485,6 +503,9 @@
 			packageReferences = (
 				F6178F8324606A1900600557 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				F6F2606124EF41AB00087A8F /* XCRemoteSwiftPackageReference "OneSignal-iOS-SDK" */,
+				F61C94082574139800F0679E /* XCRemoteSwiftPackageReference "StatefulTabView" */,
+				F663760925A157BF0068BA06 /* XCRemoteSwiftPackageReference "PartialSheet" */,
+				F663761125A3A53D0068BA06 /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */,
 			);
 			productRefGroup = F6D256DA238B1B3C009840CC /* Products */;
 			projectDirPath = "";
@@ -556,6 +577,7 @@
 				F6F2609524F36A4C00087A8F /* SocialCard.swift in Sources */,
 				F6F2608F24F1959800087A8F /* BulletinCard.swift in Sources */,
 				F6F2605024EDD59500087A8F /* MainView.swift in Sources */,
+				F61C93D52572EDFD00F0679E /* NotificationTab.swift in Sources */,
 				F6E9ABA024E9F64000B3526B /* PointsCard.swift in Sources */,
 				F669B768238B97B500819E52 /* ScheduleDetails.swift in Sources */,
 				F6D256DD238B1B3C009840CC /* AppDelegate.swift in Sources */,
@@ -564,9 +586,11 @@
 				F6E9AB9A24E8A5FC00B3526B /* HouseDetails.swift in Sources */,
 				F6178F87246119C800600557 /* ExploreTab.swift in Sources */,
 				F669B76B23933F6E00819E52 /* ScheduleCard.swift in Sources */,
+				F62E7DFC25476AFA00773A95 /* CourseDetails.swift in Sources */,
 				F657675924C26FFE007E8AFB /* UpdateCard.swift in Sources */,
 				F6D256DF238B1B3C009840CC /* SceneDelegate.swift in Sources */,
 				F6F2606C24F04B1600087A8F /* LockerView.swift in Sources */,
+				F62E7DF525474C9900773A95 /* CourseView.swift in Sources */,
 				F6178F892461C36500600557 /* HouseCard.swift in Sources */,
 				F6D256E1238B1B3C009840CC /* ContentView.swift in Sources */,
 				F6F2606E24F0543400087A8F /* RoomView.swift in Sources */,
@@ -775,7 +799,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STMC/STMC.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"STMC/Preview Content\"";
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				ENABLE_PREVIEWS = YES;
@@ -789,6 +813,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -803,7 +828,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = STMC/STMC.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"STMC/Preview Content\"";
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				ENABLE_PREVIEWS = YES;
@@ -817,6 +842,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -912,7 +938,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -920,6 +946,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -932,7 +959,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -940,6 +967,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -954,7 +982,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -962,6 +990,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -976,7 +1005,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = U37XPRZCY6;
 				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -984,6 +1013,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.stthomasmorecollegiate.STMC.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1060,6 +1090,30 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		F61C94082574139800F0679E /* XCRemoteSwiftPackageReference "StatefulTabView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NicholasBellucci/StatefulTabView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.5;
+			};
+		};
+		F663760925A157BF0068BA06 /* XCRemoteSwiftPackageReference "PartialSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AndreaMiotto/PartialSheet.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.11;
+			};
+		};
+		F663761125A3A53D0068BA06 /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/SwiftUIRefresh.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.3;
+			};
+		};
 		F6F2606124EF41AB00087A8F /* XCRemoteSwiftPackageReference "OneSignal-iOS-SDK" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/OneSignal/OneSignal-iOS-SDK/";
@@ -1075,6 +1129,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F6178F8324606A1900600557 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		F61C94092574139800F0679E /* StatefulTabView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F61C94082574139800F0679E /* XCRemoteSwiftPackageReference "StatefulTabView" */;
+			productName = StatefulTabView;
+		};
+		F663760A25A157BF0068BA06 /* PartialSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F663760925A157BF0068BA06 /* XCRemoteSwiftPackageReference "PartialSheet" */;
+			productName = PartialSheet;
+		};
+		F663761225A3A53F0068BA06 /* SwiftUIRefresh */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F663761125A3A53D0068BA06 /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */;
+			productName = SwiftUIRefresh;
 		};
 		F6F2606224EF41AB00087A8F /* OneSignal */ = {
 			isa = XCSwiftPackageProductDependency;

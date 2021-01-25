@@ -21,19 +21,34 @@ struct ScheduleCard: View {
                 VStack(alignment: .leading){
                     HStack() {
                         VStack(alignment: .leading){
-                            Text(schedule.summary)
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.white)
-                                .padding(.leading)
-                            
-                            Text("\(schedule.scheduleType) (\(schedule.scheduleFamily))")
+                            HStack {
+                                Text(schedule.summary)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.white)
+                                    .padding(.leading)
+                                    .font(.system(.title, design: .rounded))
+                                Image(systemName:"chevron.right.2")
+                                    .resizable()
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(Color.white)
+
+                                Text(schedule.scheduleFamily)
+                                    .foregroundColor(Color.white)
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .fontWeight(.semibold)
+                                    .frame(height: 12)
+
+                            }
+                            .offset(y: 3)
+
+                            Text(schedule.scheduleType)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(Color.white)
                                 .padding(.leading)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
+                                .offset(y: -3)
                         }
                         Spacer()
                         VStack(alignment: .center, spacing: -5.0) {
@@ -53,7 +68,7 @@ struct ScheduleCard: View {
             }
             .padding([.leading, .trailing])
             .padding(.bottom, 5)
-            .shadow(radius: 5)
+            .shadow(radius: 2)
         }
         .buttonStyle(ScaleButtonStyle())
     }
@@ -75,12 +90,11 @@ func formatDay(dayString: String) -> String {
     }
 }
 
-private func colorMatch(scheduleType: String) -> Color {
+func colorMatch(scheduleType: String) -> Color {
     let colorDict = [
-        "Regular Schedule": Color.SPAD,
+        "Regular Schedule": Color.STMC,
         "Career Education Schedule": Color.ACAS,
         "PLC/ Staff Meetings/ Compass Schedule": Color.LTST,
-        "PLC/ Staff Meeting/ Compass Schedule": Color.LTST,
         "Mass Schedule": Color.MASS,
         "Modified Schedule": Color.MODF
     ]

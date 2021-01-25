@@ -12,6 +12,8 @@ import GoogleSignIn
 struct ContentView: View {
     @EnvironmentObject var userStatus: Profile
     @EnvironmentObject var guestMode: GuestMode
+
+    
     var body: some View {
         if self.userStatus.user?.profile.name == nil && self.guestMode.enabled == false {
             ZStack {
@@ -51,6 +53,7 @@ struct ContentView: View {
             }
             .background(Image("HomePlaceholder"))
             .padding(.horizontal)
+
         }
         else if self.guestMode.enabled == true {
             GuestView()
@@ -59,6 +62,7 @@ struct ContentView: View {
         else {
             MainView()
                 .environmentObject(userStatus)
+
         }
         
     }

@@ -10,10 +10,10 @@ import SwiftyJSON
 
 struct CalendarView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @State var view = "Calendar"
     var body: some View {
         NavigationView {
             CalendarList()
-            
             .navigationBarTitle(Text("Calendar"))
             .navigationBarItems(leading:
                 Button(action:{
@@ -35,47 +35,49 @@ struct CalendarList: View {
     @ObservedObject private var Calendar = CalendarEvents()
 
     var body: some View {
-        List {
-            if self.Calendar.events.count == 0 {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .frame(width: 50, height: 50)
-                    Spacer()
+        if self.Calendar.events.count == 0 {
+            HStack {
+                Spacer()
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .frame(width: 50, height: 50)
+                Spacer()
 
-                }
             }
+        }
+        List {
             ForEach (Array(Calendar.months.enumerated()), id: \.element) { index, month in
-                Section (header:
-                    HStack {
+                if self.Calendar.events[index].count > 0 {
+                    Section (header:
                         Text(month)
-                            .font(.callout)
+                            .font(.system(.title3, design: .rounded))
                             .fontWeight(.bold)
                             .textCase(.none)
-                }){
-                    if self.Calendar.events.count > 0 {
-                        ForEach(self.Calendar.events[index], id: \.self) { event in
-                            NavigationLink(destination: CalendarDetails(CalendarEvent: event)) {
-                                HStack {
-                                    ZStack {
-                                        Rectangle()
-                                            .foregroundColor(.white)
-                                            .frame(width:20, height:20)
-                                            .cornerRadius(10)
-                                        Image(systemName: "\(formatDay(dayString: event.startDate)).circle.fill")
-                                            .resizable()
-                                            .foregroundColor(.STMC)
-                                            .frame(width:20, height:20)
-                                            .scaledToFit()
+                            .foregroundColor(Color.primary)
+                    ) {
+                        if self.Calendar.events.count > 0 {
+                            ForEach(self.Calendar.events[index], id: \.self) { event in
+                                NavigationLink(destination: CalendarDetails(CalendarEvent: event)) {
+                                    HStack {
+                                        ZStack {
+                                            Rectangle()
+                                                .foregroundColor(.white)
+                                                .frame(width: 22, height: 22)
+                                                .cornerRadius(11)
+                                            Image(systemName: "\(formatDay(dayString: event.startDate)).circle.fill")
+                                                .resizable()
+                                                .foregroundColor(.STMC)
+                                                .frame(width: 22, height: 22)
+                                                .scaledToFit()
 
+                                        }
+                                        Text(event.summary)
                                     }
-                                    Text(event.summary)
                                 }
                             }
                         }
+                        
                     }
-                    
                 }
             }
         }
@@ -149,7 +151,6 @@ private class CalendarEvents: ObservableObject {
             DispatchQueue.main.async {
                 self.months = monthsContainer
                 self.events = eventsContainer
-                
             }
             
             if let cachedArray = try? PropertyListEncoder().encode(eventsContainer) {
@@ -192,7 +193,6 @@ private class CalendarEvents: ObservableObject {
         
         if let cachedData = UserDefaults.standard.object(forKey: "CalendarCacheDate") as? String {
             if cachedData == "\(month)-\(day)" {
-                
                 return true
             }
         }

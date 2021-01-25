@@ -12,23 +12,43 @@ import SwiftUI
 
 struct LockerView: View {
     @State private var locker: String = ""
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ScrollView {
             Divider()
-            VStack {
+            VStack (alignment: .center) {
+                if (colorScheme == .dark) {
+                    Image("Locker")
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                        .colorInvert()
+
+                }
+                else {
+                    Image("Locker")
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                }
+                
                 Text("Find directions to any locker in the school.")
-                    .font(.headline)
-                TextField("Enter Locker #", text: $locker)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.decimalPad)
-                    .padding(.horizontal, 30)
-                    .cornerRadius(10)
-                Text(generateLockerDirections(locker: Int(locker) ?? 0))
-                    .padding(.top, 30)
+                    .font(.title2)
                     .multilineTextAlignment(.center)
+                Spacer()
+                    .frame(height: 20)
+                TextField("Enter Locker #", text: $locker)
+                   // .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.decimalPad)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.TBRC)
+                    .cornerRadius(15)
+                Text(generateLockerDirections(locker: Int(locker) ?? 0))
+                    .padding(.top, 20)
+                    .multilineTextAlignment(.center)
+                    .frame(height: 100)
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 35)
             .padding(.top)
             .navigationBarTitle(Text("Lockers"))
         }
@@ -40,7 +60,7 @@ private func generateLockerDirections(locker: Int)-> String {
     let lockerDict = [
         [1, 46, "Locker \(String(locker)) is located in the PE wing, between the PE office and the maintenance room."],
         [47, 88, "Locker \(String(locker)) is located in the PE wing, on the side of the workshop."],
-        [89, 132, "Locker \(String(locker)) is located in the PE wing, between the staff room and room 115."],
+        [89, 132, "Locker \(String(locker)) is located between the staff room and room 115."],
         [133, 180, "Locker \(String(locker)) is located by room 115."],
         [181, 216, "Locker \(String(locker)) is located by room 119."],
         [217, 252, "Locker \(String(locker)) is located by room 121."],
