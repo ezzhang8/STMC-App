@@ -107,11 +107,11 @@ struct ScheduleTab: View {
                 })
             }
             .background(Color.GR.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
-            .onAppear {
-                if (ScheduleArray.cacheDate() == false) {
-                    ScheduleArray.load()
-                }
-            }
+//            .onAppear {
+//                if (ScheduleArray.cacheDate() == false) {
+//                    ScheduleArray.load()
+//                }
+//            }
             
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in

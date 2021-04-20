@@ -67,7 +67,8 @@ struct WidgetView: View {
                 Text(String("\(data.widgetData[0].scheduleType)"))
                     .font(.footnote)
                     .foregroundColor(.white)
-                    .lineLimit(1)
+                    .frame(width: 100, height: 30)
+                    .lineLimit(3)
             }
             .padding(.horizontal, 10)
             .frame(width: 300)

@@ -483,8 +483,6 @@
 				F6178F8324606A1900600557 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				F6F2606124EF41AB00087A8F /* XCRemoteSwiftPackageReference "OneSignal-iOS-SDK" */,
 				F61C94082574139800F0679E /* XCRemoteSwiftPackageReference "StatefulTabView" */,
-				F663760925A157BF0068BA06 /* XCRemoteSwiftPackageReference "PartialSheet" */,
-				F663761125A3A53D0068BA06 /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */,
 			);
 			productRefGroup = F6D256DA238B1B3C009840CC /* Products */;
 			projectDirPath = "";
@@ -1070,22 +1068,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.1.5;
-			};
-		};
-		F663760925A157BF0068BA06 /* XCRemoteSwiftPackageReference "PartialSheet" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AndreaMiotto/PartialSheet.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.11;
-			};
-		};
-		F663761125A3A53D0068BA06 /* XCRemoteSwiftPackageReference "SwiftUIRefresh" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/SwiftUIRefresh.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.3;
 			};
 		};
 		F6F2606124EF41AB00087A8F /* XCRemoteSwiftPackageReference "OneSignal-iOS-SDK" */ = {
