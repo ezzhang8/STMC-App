@@ -5,6 +5,7 @@
 //  Created by Eric Zhang on 2020-08-19.
 //  Copyright © 2020 Eric Zhang. All rights reserved.
 //
+// iOS 15 testing
 
 import SwiftUI
 import SwiftyJSON
@@ -39,7 +40,7 @@ struct MainView: View {
 
             }
 
-            Tab(title: "Notifications", systemImageName: "bell.fill", badgeValue: notlog.badgeValue) {
+            Tab(title: "Notifications", systemImageName: "bell.fill") {
                 NotificationTab()
                     .environmentObject(notlog)
             }
@@ -56,7 +57,6 @@ struct MainView: View {
         .alert(isPresented: $network.connected, content: {self.alert})
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             print("Refreshing schedule")
-            notlog.countNotifications()
         }
     }
 }

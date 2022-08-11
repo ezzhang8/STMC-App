@@ -18,6 +18,21 @@ struct GuestView: View {
                     Image(systemName: "clock.fill")
                     Text("Schedule")
                 }
+            NavigationView {
+                RoomView()
+            }
+                .tabItem {
+                    Image(systemName: "square.grid.3x1.below.line.grid.1x2")
+                    Text("Classrooms")
+                }
+            NavigationView {
+
+                LockerView()
+            }
+                .tabItem {
+                    Image(systemName: "lock.circle.fill")
+                    Text("Lockers")
+                }
             SignInView()
                 .environmentObject(guestMode)
                 .tabItem {

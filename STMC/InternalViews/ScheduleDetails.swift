@@ -11,18 +11,17 @@ import SwiftyJSON
 
 struct ScheduleDetails: View {
     var schedule: Schedule
-    var seniority: String
     @ObservedObject fileprivate var CalendarEvents: CalendarEvents
     @ObservedObject fileprivate var Override: ScheduleOverride
 
-    @State var seniorJunior: String
+    let scheduleStyling = [
+        "Morning X Blocks", Font.bold
+    ] as [Any]
     
-    init(schedule: Schedule, seniority: String) {
+    init(schedule: Schedule) {
         self.schedule = schedule
         self.CalendarEvents = STMC.CalendarEvents(dateString: schedule.startDate)
-        self.seniority = seniority
-        self._seniorJunior = State(initialValue: seniority )
-        self.Override = ScheduleOverride(schedule: schedule, seniority: seniority)
+        self.Override = ScheduleOverride(schedule: schedule)
 
     }
     
@@ -49,14 +48,6 @@ struct ScheduleDetails: View {
                                 .font(.system(size: 18, weight: .semibold, design: .rounded))
                                 .padding(.vertical, 2)
                                 .padding(.horizontal, 5)
-                            Image(systemName:"chevron.right.2")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                            Text(schedule.scheduleFamily)
-                                .font(.system(size: 18, weight: .semibold, design: .rounded))
-                                .padding(.vertical, 2)
-                                .padding(.horizontal, 5)
-
                         }
                         .padding(.top, 5)
                         Text(schedule.summary)
@@ -75,24 +66,19 @@ struct ScheduleDetails: View {
                 }
             }
             Section (header:
-                VStack (alignment: .leading){
-                    HStack {
-                        Picker(selection:$seniorJunior, label: Text("Picker")) {
-                            Text("Senior Schedule")
-                                .tag("SR")
-                                .textCase(.none)
-                            Text("Junior Schedule")
-                                .tag("JR")
-                                .textCase(.none)
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.bottom, 5)
-                        .pickerStyle(SegmentedPickerStyle())
-                        
-                    }
+                HStack {
+                    Image(systemName: "clock")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color.primary)
+                    Text("Schedule")
+                        .font(.system(.title3, design: .rounded))
+                        .fontWeight(.bold)
+                        .textCase(.none)
+                        .foregroundColor(Color.primary)
                 }
             ){
-                ForEach(generateSchedule(scheduleType: String("\(schedule.scheduleType) \(seniorJunior)"), blocks: schedule.summary) ?? Override.returnArray[seniorJunior]!, id: \.self) { i in
+                ForEach((generateSchedule(scheduleType: schedule.scheduleType, blocks: schedule.summary) ?? Override.returnArray)!, id: \.self) { i in
                     VStack {
                         HStack {
                             Text(i[0])
@@ -220,101 +206,50 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
     let blockArray = Array(blocks)
     var scheduleArray = Dictionary<String, Any>()
     
-    scheduleArray["Regular Schedule SR"] = [
+    scheduleArray["Regular Schedule"] = [
         ["Morning X Blocks", "7:00-8:15"],
         ["Warning Bell", "8:20"],
         ["Block \(blockArray[0])", "8:25-9:45"],
         ["Block \(blockArray[1])", "9:50-11:05"],
-        ["Sr. School Break", "11:05-11:15"],
+        ["Break", "11:05-11:15"],
         ["Block \(blockArray[2])", "11:20-12:35"],
-        ["Sr. School Lunch", "12:35-1:10"],
-        ["Block \(blockArray[3])", "1:15-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
+        ["Lunch", "12:35-1:20"],
+        ["Block \(blockArray[3])", "1:25-2:40"],
+        ["Afternoon Y Blocks", "2:45-4:00"]
     ]
-    scheduleArray["Regular Schedule JR"] = [
+    scheduleArray["Late Start Schedule"] = [
         ["Morning X Blocks", "7:00-8:15"],
-        ["Warning Bell", "8:20"],
-        ["Block \(blockArray[0])", "8:25-9:45"],
-        ["Jr. School Break", "9:45-9:55"],
-        ["Block \(blockArray[1])", "10:00-11:15"],
-        ["Jr. School Lunch", "11:15-11:50"],
-        ["Block \(blockArray[2])", "11:55-1:10"],
-        ["Block \(blockArray[3])", "1:15-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
+        ["Staff Meeting/PLC", "8:20-9:05"],
+        ["Warning Bell", "9:10"],
+        ["Block \(blockArray[0])", "9:20-10:25"],
+        ["Block \(blockArray[1])", "10:35-11:35"],
+        ["Block \(blockArray[2])", "11:40-12:45"],
+        ["Lunch", "12:45-1:30"],
+        ["Block \(blockArray[3])", "1:35-2:40"],
+        ["Afternoon Y Blocks", "2:45-4:00"]
     ]
-    scheduleArray["Career Education Schedule SR"] = [
+    scheduleArray["Career Education Schedule"] = [
         ["Morning X Blocks", "7:00-8:15"],
         ["Warning Bell", "8:20"],
         ["Block \(blockArray[0])", "8:25-9:30"],
         ["Block \(blockArray[1])", "9:35-10:40"],
-        ["Sr. School Break", "10:40-10:45"],
-        ["Block \(blockArray[2])", "10:50-11:55"],
-        ["Sr. School Lunch", "11:55-12:30"],
-        ["CE 10-12", "12:35-1:25"],
-        ["Block \(blockArray[3])", "1:25-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
+        ["Break", "10:40-10:50"],
+        ["Block \(blockArray[2])", "10:55-12:00"],
+        ["Lunch", "12:00-12:40"],
+        ["Career Ed", "12:45-1:35"],
+        ["Block \(blockArray[3])", "1:35-2:40"],
+        ["Afternoon Y Blocks", "2:45-4:00"]
     ]
-    scheduleArray["Career Education Schedule JR"] = [
-        ["Morning X Blocks", "7:00-8:15"],
-        ["Warning Bell", "8:20"],
-        ["Block \(blockArray[0])", "8:25-9:30"],
-        ["Jr. School Break", "9:30-9:35"],
-        ["Block \(blockArray[1])", "9:40-10:45"],
-        ["Jr. School Lunch", "10:45-11:20"],
-        ["Block \(blockArray[2])", "11:25-12:30"],
-        ["CE 8-9", "12:35-1:25"],
-        ["Block \(blockArray[3])", "1:25-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
-    ]
-    
-    scheduleArray["PLC/ Staff Meetings/ Compass Schedule SR"] = [
-        ["Morning X Blocks", "7:00-8:15"],
-        ["PLC/Staff Meetings", "8:20-9:05"],
-        ["Warning Bell", "9:10"],
-        ["Block \(blockArray[0])", "9:15-10:10"],
-        ["Block \(blockArray[1])", "10:15-11:10"],
-        ["Block \(blockArray[2])", "11:15-12:10"],
-        ["Sr. School Lunch", "12:10-12:45"],
-        ["Block \(blockArray[3])", "12:50-1:45"],
-        ["Compass Time", "1:50-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
-    ]
-    
-    scheduleArray["PLC/ Staff Meetings/ Compass Schedule JR"] = [
-        ["Morning X Blocks", "7:00-8:15"],
-        ["PLC/Staff Meetings", "8:20-9:05"],
-        ["Warning Bell", "9:10"],
-        ["Block \(blockArray[0])", "9:15-10:10"],
-        ["Block \(blockArray[1])", "10:15-11:10"],
-        ["Jr. School Lunch", "11:10-11:45"],
-        ["Block \(blockArray[2])", "11:50-12:45"],
-        ["Block \(blockArray[3])", "12:50-1:45"],
-        ["Compass Time", "1:50-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
-    ]
-        
-    scheduleArray["Mass Schedule SR"] = [
+    scheduleArray["Mass Schedule"] = [
         ["Morning X Blocks", "7:00-8:15"],
         ["Warning Bell", "8:20"],
         ["Block \(blockArray[0])", "8:25-9:35"],
         ["Block \(blockArray[1])", "9:40-10:45"],
-        ["Sr. School Break", "10:45-10:55"],
-        ["Block \(blockArray[2])", "11:00-12:05"],
-        ["Sr. School Lunch", "12:05-12:40"],
-        ["Block \(blockArray[3]) & Mass", "12:45-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
-    ]
-    
-    scheduleArray["Mass Schedule JR"] = [
-        ["Morning X Blocks", "7:00-8:15"],
-        ["Warning Bell", "8:20"],
-        ["Block \(blockArray[0])", "8:25-9:35"],
-        ["Jr. School Break", "9:35-9:45"],
-        ["Block \(blockArray[1])", "9:50-10:55"],
-        ["Jr. School Lunch", "10:55-11:30"],
-        ["Block \(blockArray[2])", "11:35-12:40"],
-        ["Block \(blockArray[3]) & Mass", "12:45-2:30"],
-        ["Afternoon Y Blocks", "2:35-3:50"]
+        ["Break", "10:45-10:55"],
+        ["Block \(blockArray[2]) & Mass", "11:00-12:50"],
+        ["Lunch", "12:50-1:30"],
+        ["Block \(blockArray[3])", "1:35-2:40"],
+        ["Afternoon Y Blocks", "2:45-4:00"]
     ]
     
     if scheduleArray[scheduleType] != nil {
@@ -326,15 +261,13 @@ private func generateSchedule(scheduleType: String, blocks: String) -> [[String]
 }
 
 private class ScheduleOverride: ObservableObject {
-    @Published var returnArray = [
-        "JR": [[String]](),
-        "SR": [[String]](),
-    ]
+    @Published var returnArray = [[String]]()
     
-    init(schedule: Schedule, seniority: String) {
-        self.schedule(schedule: schedule, seniority: seniority)
+    
+    init(schedule: Schedule) {
+        self.schedule(schedule: schedule)
     }
-    func schedule(schedule: Schedule, seniority: String) {
+    func schedule(schedule: Schedule) {
         sendRequest(url: String(API.url+"overrides/"), completion: { json in
             let error = json["error"].string
 
@@ -347,25 +280,13 @@ private class ScheduleOverride: ObservableObject {
             
             for day in array {
                 let date = day["date"].stringValue
-                let scheduleJr = day["scheduleJr"].array!
-                let scheduleSr = day["scheduleSr"].array!
+                let scheduleJson = day["schedule"].array!
 
                 if date == schedule.startDate {
-                    for row in scheduleJr {
+                    for row in scheduleJson {
                         let entry = [row["name"].stringValue, row["timeSlot"].stringValue]
                         DispatchQueue.main.async {
-                            self.returnArray["JR"]!.append(entry)
-                        }
-                    }
-                
-                    for row in scheduleSr {
-                        let entry = [row["name"].stringValue, row["timeSlot"].stringValue]
-                        DispatchQueue.main.async {
-                            self.returnArray["SR"]!.append(entry)
-                            
-                            if let cachedArray = try? PropertyListEncoder().encode(self.returnArray) {
-                                UserDefaults.standard.set(cachedArray, forKey: "ScheduleFor"+date)
-                            }
+                            self.returnArray.append(entry)
                         }
                     }
                 }
@@ -374,7 +295,7 @@ private class ScheduleOverride: ObservableObject {
     }
     func loadScheduleFromCache(date: String) {
         if let cachedData = UserDefaults.standard.data(forKey: "ScheduleFor"+date) {
-            self.returnArray = try! PropertyListDecoder().decode([String: [[String]]].self, from: cachedData)
+            self.returnArray = try! PropertyListDecoder().decode([[String]].self, from: cachedData)
         }
     }
 }

@@ -24,15 +24,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         userStatus.retrieveSavedUser()
         
-        //START OneSignal initialization code
-        let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false, kOSSettingsKeyInAppLaunchURL: false]
-          
-        OneSignal.initWithLaunchOptions(launchOptions,
-            appId: "1e71fe3f-1946-42ca-9e77-956a87cb8b3c",
-            handleNotificationAction: nil,
-            settings: onesignalInitSettings)
+        OneSignal.initWithLaunchOptions(launchOptions)
+        OneSignal.setAppId("1e71fe3f-1946-42ca-9e77-956a87cb8b3c")
 
-        OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
+        
+//        //START OneSignal initialization code
+//        let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false, kOSSettingsKeyInAppLaunchURL: false]
+//
+//        OneSignal.initWithLaunchOptions(launchOptions,
+//            appId: "1e71fe3f-1946-42ca-9e77-956a87cb8b3c",
+//            handleNotificationAction: nil,
+//            settings: onesignalInitSettings)
+//
+//        OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
         
         // Override point for customization after application launch.
         UIButton.appearance().isMultipleTouchEnabled = false
@@ -78,9 +82,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // Updates the user status with the GIDGoogleUser received to log in. This object is then passed to the ContentView, which contains an Environment Object that helps to update the view.
         userStatus.updateUser(user: user)
         // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 6)
-        OneSignal.promptForPushNotifications(userResponse: { accepted in
-            print("User accepted notifications: \(accepted)")
-        })
+//        OneSignal.promptForPushNotifications(userResponse: { accepted in
+//            print("User accepted notifications: \(accepted)")
+//        })
         //END OneSignal initializataion code
     }
     

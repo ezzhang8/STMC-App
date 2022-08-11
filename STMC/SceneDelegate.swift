@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -35,7 +36,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             window.rootViewController = UIHostingController(rootView: contentView.environmentObject(userStatus).environmentObject(guestMode))
             self.window = window
+            
             window.makeKeyAndVisible()
+            
+            GIDSignIn.sharedInstance()?.presentingViewController = window.rootViewController
+
         }
 
                     

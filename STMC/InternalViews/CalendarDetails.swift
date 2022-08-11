@@ -7,9 +7,10 @@
 //
 
 import SwiftUI
-import MobileCoreServices
+import CoreServices
 import EventKit
 import EventKitUI
+import Foundation
 
 struct CalendarDetails: View {
     @Environment(\.openURL) var openURL
@@ -23,17 +24,17 @@ struct CalendarDetails: View {
     var body: some View {
         List {
             Section (header:
-                HStack {
-                    Image(systemName: "pencil.and.outline")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(Color.primary)
-                    Text(CalendarEvent?.summary ?? "Error")
-                        .font(.system(.title3, design: .rounded))
-                        .fontWeight(.bold)
-                        .textCase(.none)
-                        .foregroundColor(Color.primary)
-                }
+                        HStack {
+                Image(systemName: "pencil.and.outline")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(Color.primary)
+                Text(CalendarEvent?.summary ?? "Error")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.bold)
+                    .textCase(.none)
+                    .foregroundColor(Color.primary)
+            }
             ){
                 HStack {
                     Image(systemName: "calendar")
@@ -58,22 +59,25 @@ struct CalendarDetails: View {
             }
             if CalendarEvent?.description != nil && !(CalendarEvent?.description?.contains("</"))!{
                 Section (header:
-                    HStack {
-                        Image(systemName: "square.and.pencil")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(Color.primary)
-                        Text("Description")
-                            .font(.system(.title3, design: .rounded))
-                            .fontWeight(.bold)
-                            .textCase(.none)
-                            .foregroundColor(Color.primary)
-                    }
+                            HStack {
+                    Image(systemName: "square.and.pencil")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color.primary)
+                    Text("Description")
+                        .font(.system(.title3, design: .rounded))
+                        .fontWeight(.bold)
+                        .textCase(.none)
+                        .foregroundColor(Color.primary)
+                }
                 ){
                     HStack {
                         Text((CalendarEvent?.description)!)
                             .contextMenu(ContextMenu(menuItems: {
-                                Button(action: {UIPasteboard.general.setValue(CalendarEvent?.description as Any,forPasteboardType: kUTTypePlainText as String)}, label: {
+                                Button(action: {
+                                    UIPasteboard.general.string = CalendarEvent?.description
+                                    
+                                }, label: {
                                     Text("Copy to Clipboard")
                                     Image(systemName: "doc.on.doc")
                                 })
@@ -81,20 +85,20 @@ struct CalendarDetails: View {
                     }
                 }
             }
-                
+            
             Section (header:
-                HStack {
-                    Image(systemName: "paperplane")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(Color.primary)
-                    Text("Actions")
-                        .font(.system(.title3, design: .rounded))
-                        .fontWeight(.bold)
-                        .textCase(.none)
-                        .foregroundColor(Color.primary)
-                        
-                }
+                        HStack {
+                Image(systemName: "paperplane")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(Color.primary)
+                Text("Actions")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.bold)
+                    .textCase(.none)
+                    .foregroundColor(Color.primary)
+                
+            }
             ){
                 Button(action: {
                     eventSaver.saveEventToCalendar(CalendarEvent: CalendarEvent!)
@@ -147,14 +151,14 @@ class CalendarSaver: ObservableObject {
                 
                 if CalendarEvent.startTime == nil {
                     dateFormatter.dateFormat = "yyyy-MM-dd"
-
+                    
                     event.isAllDay = true
                     event.startDate = dateFormatter.date(from: CalendarEvent.startDate)
                     event.endDate = dateFormatter.date(from: CalendarEvent.endDate)
                 }
                 else {
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-                                    
+                    
                     event.isAllDay = false
                     event.startDate = dateFormatter.date(from: CalendarEvent.startTime!)
                     event.endDate = dateFormatter.date(from: CalendarEvent.endTime!)
@@ -204,14 +208,14 @@ private func saveEventToCalendar(CalendarEvent: CalendarEvent) {
             
             if CalendarEvent.startTime == nil {
                 dateFormatter.dateFormat = "yyyy-MM-dd"
-
+                
                 event.isAllDay = true
                 event.startDate = dateFormatter.date(from: CalendarEvent.startDate)
                 event.endDate = dateFormatter.date(from: CalendarEvent.endDate)
             }
             else {
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-                                
+                
                 event.isAllDay = false
                 event.startDate = dateFormatter.date(from: CalendarEvent.startTime!)
                 event.endDate = dateFormatter.date(from: CalendarEvent.endTime!)
@@ -243,7 +247,7 @@ private func formatDateTime(dateString: String?) -> String? {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en-US")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-    
+        
         let date = dateFormatter.date(from: dateString!)
         dateFormatter.dateFormat = "h:mm a"
         

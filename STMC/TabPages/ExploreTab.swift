@@ -12,35 +12,35 @@ import GoogleSignIn
 
 struct ExploreTab: View {
     @EnvironmentObject var userStatus: Profile
-
-
+    
+    
     @State private var showingUser: Bool = false
     @State private var showingCourses: Bool = false
     
     @ObservedObject fileprivate var houses = Houses()
     @ObservedObject fileprivate var bulletins = Bulletins()
-
+    
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack (alignment: .leading) {
                     Divider()
                     Section(header:
-                        HStack {
-                            Image(systemName: "shield.lefthalf.fill")
-                                .resizable()
-                                .frame(width: 20, height:22)
-                            Text("Houses")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                            Spacer()
-                            Text(houses.getLead())
-                                .fontWeight(.semibold)
-                                .foregroundColor(houses.getLeadingHouseColor())
-                                .padding(.trailing)
-                            
-                        }
-                        .padding(.leading)
+                                HStack {
+                        Image(systemName: "shield.lefthalf.fill")
+                            .resizable()
+                            .frame(width: 20, height:22)
+                        Text("Houses")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        Spacer()
+                        Text(houses.getLead())
+                            .fontWeight(.semibold)
+                            .foregroundColor(houses.getLeadingHouseColor())
+                            .padding(.trailing)
+                        
+                    }
+                                .padding(.leading)
                     ) {
                         ScrollView (.horizontal, showsIndicators: false){
                             VStack {
@@ -52,7 +52,7 @@ struct ExploreTab: View {
                                                 .progressViewStyle(CircularProgressViewStyle())
                                                 .frame(width: 50, height: 50)
                                             Spacer()
-
+                                            
                                         }
                                     }
                                     ForEach(houses.houseData, id: \.self) { house in
@@ -60,7 +60,7 @@ struct ExploreTab: View {
                                     }
                                     
                                     Spacer()
-                                    .frame(width: 8)
+                                        .frame(width: 8)
                                 }
                                 .padding([.leading, .bottom])
                                 
@@ -69,16 +69,16 @@ struct ExploreTab: View {
                     }
                     Divider()
                     Section(header:
-                        HStack {
-                            Image(systemName: "pin")
-                                .resizable()
-                                .frame(width: 18, height: 25)
-                            Text("Bulletin")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                            
-                        }
-                        .padding(.leading)
+                                HStack {
+                        Image(systemName: "pin")
+                            .resizable()
+                            .frame(width: 18, height: 25)
+                        Text("Bulletin")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        
+                    }
+                                .padding(.leading)
                     ) {
                         ScrollView (.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
@@ -100,16 +100,16 @@ struct ExploreTab: View {
                     }
                     Divider()
                     Section(header:
-                        HStack {
-                            Image(systemName: "doc.text.magnifyingglass")
-                                .resizable()
-                                .frame(width: 20, height: 25)
-                            Text("Find")
-                                .font(.title3)
-                                .fontWeight(.bold)
-                            
-                        }
-                        .padding(.leading)
+                                HStack {
+                        Image(systemName: "doc.text.magnifyingglass")
+                            .resizable()
+                            .frame(width: 20, height: 25)
+                        Text("Find")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        
+                    }
+                                .padding(.leading)
                     ) {
                         ScrollView (.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
@@ -121,28 +121,28 @@ struct ExploreTab: View {
                                     SmallCard(text: "Lockers")
                                 }
                                 .buttonStyle(ScaleButtonStyle())
-
+                                
                             }
                             .padding([.horizontal, .bottom])
-
+                            
                         }
-                    
+                        
                         Spacer()
                     }
-            }
-            .navigationBarTitle(Text("Explore"))
-            .navigationBarItems(leading:
-                Button(action:{
+                }
+                .navigationBarTitle(Text("Explore"))
+                .navigationBarItems(leading:
+                                        Button(action:{
                     self.showingUser.toggle()
                 }) {
                     Image(systemName: "person.circle")
                         .resizable()
                         .accentColor(.STMC)
                         .frame(width: 25, height: 25)
-
+                    
                 }
-                .frame(width: 25, height: 45)
-                .sheet(isPresented: $showingUser) {
+                                        .frame(width: 25, height: 45)
+                                        .sheet(isPresented: $showingUser) {
                     UserInfoView()
                         .environmentObject(userStatus)
                 })
@@ -176,10 +176,10 @@ struct SmallCard: View {
                     LinearGradient(gradient: houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading)
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 15))
-
+                
                 .padding(.bottom, 5)
             }
-
+            
         }
     }
 }
@@ -207,7 +207,7 @@ private class Houses: ObservableObject {
     init() {
         sendRequest(url: String(API.url+"houses/"), completion: { json in
             let error = json["error"].string
-
+            
             if error != nil  {
                 if let cachedData = UserDefaults.standard.data(forKey: "HouseData") {
                     DispatchQueue.main.async {
@@ -242,13 +242,22 @@ private class Houses: ObservableObject {
     
     func getLead() -> String {
         if self.houseData.count > 2 {
-            return self.houseData[0].houseName + " +" + String(self.houseData[0].points - self.houseData[1].points) + " pts."
+            let num = self.houseData[0].houseName + " +" + String(self.houseData[0].points - self.houseData[1].points)
+            
+            if (self.houseData[0].points - self.houseData[1].points == 0) {
+                return "Tie +0 pts."
+            }
+            
+            return num + " pts."
         }
         return ""
     }
     
     func getLeadingHouseColor() -> Color {
         if self.houseData.count > 2 {
+            if self.houseData[0].points == self.houseData[1].points {
+                return Color.STMC
+            }
             return houseColors[self.houseData[0].houseName] ?? Color.STMC
         }
         return Color.STMC
@@ -261,7 +270,7 @@ private class Bulletins: ObservableObject {
     init() {
         sendRequest(url: String(API.url+"bulletin/"), completion: { json in
             let error = json["error"].string
-
+            
             if error != nil {
                 return
             }
@@ -275,7 +284,7 @@ private class Bulletins: ObservableObject {
                 let imageLink = bulletin["imageLink"].string
                 let webLink = bulletin["webLink"].string
                 let house = bulletin["house"].string
-
+                
                 DispatchQueue.main.async {
                     self.bulletinData.append(Bulletin(id: id, name: name, dateAdded: dateAdded,  description: description, imageLink: imageLink, webLink: webLink, house: house))
                 }

@@ -141,7 +141,7 @@ private class CalendarEvents: ObservableObject {
                     monthsContainer.append(month!)
                     
                 }
-                if !summary.hasPrefix("MORE - ") && !summary.hasPrefix("RICE - ") 	{
+                if !summary.hasPrefix("Day 1") && !summary.hasPrefix("Day 2") && !summary.hasPrefix("Academic/") && !summary.hasPrefix("Staff &") && !summary.contains("Mass Schedule") {
                     eventsContainer[monthsContainer.count-1].append(CalendarEvent(id: id, summary: summary, startDate: startDate!, endDate: endDate!, startTime: startDateTime, endTime: endDateTime, description: description, htmlLink: htmlLink))
                 }
                 

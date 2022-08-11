@@ -45,7 +45,7 @@ struct ScheduleTab: View {
                         }
                         ForEach(Array(ScheduleArray.data.enumerated()), id: \.element) { index, schedule in
                             if index == 0 {
-                                ScheduleCard(schedule: schedule, seniority: determineSeniority(userStatus: userStatus))
+                                ScheduleCard(schedule: schedule)
                             }
                         }
                         .onAppear {
@@ -79,7 +79,7 @@ struct ScheduleTab: View {
                         }
                         ForEach(0..<ScheduleArray.data.count, id: \.self) { index in
                             if index > 0 {
-                                ScheduleCard(schedule: ScheduleArray.data[index], seniority: determineSeniority(userStatus: userStatus))
+                                ScheduleCard(schedule: ScheduleArray.data[index])
                             }
                         }
                         
@@ -164,7 +164,6 @@ private class Schedules: ObservableObject {
                 let date = day["date"].stringValue
                 let blockRotation = day["blockRotation"].stringValue
                 let scheduleType = day["scheduleType"].stringValue
-                let scheduleFamily = day["scheduleFamily"].stringValue
                 let index = self.data.firstIndex{$0.startDate == date}
                 
                 DispatchQueue.main.async {
@@ -172,7 +171,7 @@ private class Schedules: ObservableObject {
                         let id = self.data[index!].id
                         let dotw = self.data[index!].dotw
                         
-                        self.data[index!] = Schedule(id: id, summary: blockRotation, dotw: dotw, startDate: date, scheduleType: scheduleType, scheduleFamily: scheduleFamily)
+                        self.data[index!] = Schedule(id: id, summary: blockRotation, dotw: dotw, startDate: date, scheduleType: scheduleType)
                         if let cachedArray = try? PropertyListEncoder().encode(self.data) {
                             self.UD.set(cachedArray, forKey: "ScheduleData")
                         }
@@ -200,26 +199,52 @@ private class Schedules: ObservableObject {
             let items = json["items"].array!
             
             UserDefaults.standard.removeObject(forKey: "ScheduleData")
-
             for item in items {
                 let summary = item["summary"].stringValue
                 let id = item["id"].stringValue
                 let startDate = item["start"]["date"].string
-                                
-                if startDate != nil && summary.hasPrefix("MORE - ") || summary.hasPrefix("RICE - ") {
-                    var dotw: String
-                    
-                    let scheduleComponents = summary.components(separatedBy: " - ")
+                var dotw: String
+
+                if startDate != nil && summary.hasPrefix("Day 1") || summary.hasPrefix("Day 2") {
                     dotw = self.dayFromDateString(dateString: startDate!)
+                    self.scheduleData.append(Schedule(id: id, summary: String(summary.suffix(4)), dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule"))
+                }
+
+            }
+                        
+            for item in items {
+                let summary = item["summary"].stringValue
+                var startDate = item["start"]["date"].string
+                let startDateTime = item["start"]["dateTime"].string
+
+                if startDate == nil && startDateTime != nil {
+                    startDate = String(startDateTime!.prefix(10))
+                }
+
+                if summary.contains("Mass Schedule") || summary.hasPrefix("Academic/ Assembly") || summary.contains("Late Start")  {
+                    var renameDict = [
+                        "Academic/ Assembly Schedule": "Career Education Schedule",
+                        "Staff & PLC Meeting Schedule": "Late Start Schedule"
+                    ]
                     
-                    if scheduleComponents.count > 2 {
-                        self.scheduleData.append(Schedule(id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: scheduleComponents[2], scheduleFamily: scheduleComponents[0]))
+                    if summary.contains("Mass Schedule") {
+                        renameDict[summary] = "Mass Schedule"
                     }
-                    else {
-                        self.scheduleData.append(Schedule(id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule", scheduleFamily: scheduleComponents[0]))
+                    
+                    if summary.contains("Late Start") {
+                        renameDict[summary] = "Late Start Schedule"
+                    }
+
+                    for (index, day) in self.scheduleData.enumerated() {
+                        if day.startDate == String(startDate!) {
+                            self.scheduleData[index].scheduleType = renameDict[summary] ?? "-"
+                            break
+                        }
                     }
                 }
+                
             }
+
             DispatchQueue.main.async {
                 self.setCacheDate()
 
@@ -281,19 +306,10 @@ private class Schedules: ObservableObject {
     }
 }
 
-private func determineSeniority(userStatus: Profile) -> String {
-    if (userStatus.user?.profile.email.contains("2024") == true ||
-        userStatus.user?.profile.email.contains("2025") == true) {
-        return "JR"
-    }
-    return "SR"
-}
-
 struct Schedule: Identifiable, Hashable, Codable {
     var id: String
     var summary: String
     var dotw: String
     var startDate: String
     var scheduleType: String
-    var scheduleFamily: String
 }

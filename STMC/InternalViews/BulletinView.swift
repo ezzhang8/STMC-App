@@ -25,15 +25,20 @@ struct BulletinView: View {
             ScrollView(showsIndicators: false) {
                 VStack {
                     if bulletin.imageLink != nil {
-                        RemoteImage(url: URL(string: bulletin.imageLink!)!)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 300)
-                            .cornerRadius(10)
-                            .padding(EdgeInsets(top: 75, leading: 0, bottom: 0, trailing: 0))
+                        VStack {
+                            Spacer()
+                                .frame(height: 75)
+
+                            RemoteImage(url: URL(string: bulletin.imageLink!)!)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 300)
+                                .cornerRadius(10)
+
+                        }
                     }
                     else {
                         Spacer()
-                            .padding(EdgeInsets(top: 100, leading: 0, bottom: 0, trailing: 0))
+                            .frame(height: 100)
 
                     }
                     VStack {
@@ -50,6 +55,8 @@ struct BulletinView: View {
                             Divider()
                             Text(bulletin.description)
                                 .font(.callout)
+                                .lineLimit(nil)
+                                .frame(maxHeight: .infinity)
                                 .padding(.bottom, 5)
                         }
                         .padding(15)

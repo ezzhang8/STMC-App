@@ -27,6 +27,8 @@ struct PointsCard: View {
                                     .font(.system(size: 18, weight: .semibold))
                                     .lineLimit(1)
                                     .truncationMode(.tail)
+                        
+                                
                                 Text(entry.date)
                                     .font(.system(size: 14, weight: .medium))
                             }
@@ -47,6 +49,11 @@ struct PointsCard: View {
                                     .font(.system(size: 18, weight: .semibold))
                                     .lineLimit(nil)
                                     .fixedSize(horizontal: false, vertical: true)
+                                if (entry.description != nil) {
+                                    Text(entry.description!)
+                                        .font(.system(size: 12, weight: .light))
+
+                                }
                                 Text(entry.dateFull)
                                     .font(.system(size: 14, weight: .medium))
                                 

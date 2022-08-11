@@ -10,9 +10,8 @@ import SwiftUI
 
 struct ScheduleCard: View {
     var schedule: Schedule
-    var seniority: String
     var body: some View {
-        NavigationLink(destination: ScheduleDetails(schedule: schedule, seniority: seniority)) {
+        NavigationLink(destination: ScheduleDetails(schedule: schedule)) {
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 15)
                     .frame(height: 75)
@@ -31,12 +30,6 @@ struct ScheduleCard: View {
                                     .resizable()
                                     .frame(width: 12, height: 12)
                                     .foregroundColor(Color.white)
-
-                                Text(schedule.scheduleFamily)
-                                    .foregroundColor(Color.white)
-                                    .font(.system(.subheadline, design: .rounded))
-                                    .fontWeight(.semibold)
-                                    .frame(height: 12)
 
                             }
                             .offset(y: 3)
@@ -94,7 +87,7 @@ func colorMatch(scheduleType: String) -> Color {
     let colorDict = [
         "Regular Schedule": Color.STMC,
         "Career Education Schedule": Color.ACAS,
-        "PLC/ Staff Meetings/ Compass Schedule": Color.LTST,
+        "Late Start Schedule": Color.LTST,
         "Mass Schedule": Color.MASS,
         "Modified Schedule": Color.MODF
     ]

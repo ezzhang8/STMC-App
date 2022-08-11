@@ -72,9 +72,21 @@ struct HouseDetails : View {
                             }
                             
                             VStack(spacing: 10) {
-                                ForEach(points.data, id: \.self) { i in
-                                    PointsCard(entry: i, houseName: house.houseName)
+                                if (points.data.count > 0) {
+                                    ForEach(points.data, id: \.self) { i in
+                                        PointsCard(entry: i, houseName: house.houseName)
+                                    }
                                 }
+                                else {
+                                    Text("No points to display yet.")
+                                        .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: .infinity)
+                                        .multilineTextAlignment(.leading)
+                                        .padding(.top, 10)
+                                        .padding(.horizontal, 20)
+                                        .lineLimit(nil)
+
+                                }
+                                
                             }
                             Spacer()
                                 .frame(minHeight: 20, maxHeight: 50)
@@ -90,44 +102,48 @@ struct HouseDetails : View {
                 }
             })
             if self.show {
-                HStack {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(alignment: .center){
-                            Button(action: {
-                                self.presentationMode.wrappedValue.dismiss()
-                            }) {
-                                HStack {
-                                    Image(systemName: "chevron.left.circle.fill")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
+                GeometryReader { geometry in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(alignment: .center){
+                                Button(action: {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                    
+                                    print(geometry.safeAreaInsets)
+                                }) {
+                                    HStack {
+                                        Image(systemName: "chevron.left.circle.fill")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                    }
                                 }
+                                .accentColor(houseColors[house.houseName])
+                                .padding(.leading, 15)
+                                Image(house.houseName)
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                
                             }
-                            .accentColor(houseColors[house.houseName])
-                            .padding(.leading, 15)
-                            Image(house.houseName)
-                                .resizable()
-                                .frame(width: 40, height: 40)
-                            
                         }
+                        Text(house.houseName)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .lineLimit(1)
+                            .multilineTextAlignment(.leading)
+                        Spacer(minLength: 0)
+                        Text(String(house.points) + " pts.")
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundColor(.white)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 8)
+                            .background(LinearGradient(gradient: houseGradient[house.houseName] ?? houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading))
+                            .clipShape(Capsule())
                     }
-                    Text(house.houseName)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .lineLimit(1)
-                        .multilineTextAlignment(.leading)
-                    Spacer(minLength: 0)
-                    Text(String(house.points) + " pts.")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 8)
-                        .background(LinearGradient(gradient: houseGradient[house.houseName] ?? houseGradients, startPoint: .bottomTrailing, endPoint: .topLeading))
-                        .clipShape(Capsule())
+                    .padding(.top, geometry.safeAreaInsets.bottom < 83 ? 25 : 40)
+                    .padding(.trailing)
+                    .padding(.bottom)
+                    .background(BlurBG())
                 }
-                .padding(.top, UIApplication.shared.windows.first?.safeAreaInsets.top == 0 ? 15 : (UIApplication.shared.windows.first?.safeAreaInsets.top)! + 5)
-                .padding(.trailing)
-                .padding(.bottom)
-                .background(BlurBG())
             }
         })
         .edgesIgnoringSafeArea(.top)
@@ -148,6 +164,7 @@ struct BlurBG : UIViewRepresentable {
 
 struct PointEntry: Hashable, Codable {
     let action: String
+    let description: String?
     let date: String
     let points: Int
     let dateFull: String
@@ -191,8 +208,9 @@ private class Points: ObservableObject {
                 let points = entry["points"].intValue
                 let dateFull = entry["date"].stringValue
                 let approvedBy = entry["approvedBy"].stringValue
+                let description = entry["description"].string
                 
-                pointContainer.append(PointEntry(action: action, date: String(date), points: points, dateFull: dateFull, approvedBy: approvedBy))
+                pointContainer.append(PointEntry(action: action, description: description, date: String(date), points: points, dateFull: dateFull, approvedBy: approvedBy))
             }
             DispatchQueue.main.async {
                 self.data = pointContainer

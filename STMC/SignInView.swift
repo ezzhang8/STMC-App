@@ -15,7 +15,7 @@ struct SignInView: View {
 
     var body: some View {
         VStack {
-            Text("To access all features of the STMC App, please exit Guest Mode and sign in with a school account.")
+            Text("To access all features of the STMC App, please exit Guest Mode and sign in with a school account. For new students who haven't received an account yet, please sign in when you receive your credentials. For parents who would like to use additional features, please ask your child to sign in for you.")
                 .fontWeight(.bold)
                 .font(.headline)
                 .multilineTextAlignment(.center)
@@ -38,9 +38,22 @@ struct SignInView: View {
 }
 
 struct LogInButton: View {
-    init() {
-        GIDSignIn.sharedInstance()?.presentingViewController = UIApplication.shared.windows.first?.rootViewController
-    }
+//    init?() {
+//        guard let keyWindow = UIApplication.shared.connectedScenes
+//                
+//                .filter({$0.activationState == .foregroundActive})
+//                
+//                .map({$0 as? UIWindowScene})
+//                
+//                .compactMap({$0})
+//                
+//                .first else { return nil }
+//
+//        let window = UIWindow(windowScene: keyWindow)
+//        
+//        
+//         = window.rootViewController
+//    }
     var body: some View {
         
         Button(action: {

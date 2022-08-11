@@ -55,20 +55,16 @@ struct WidgetView: View {
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                 Text(data.widgetData[0].summary)
-                    .font(.title)
+                    .font(.system(.title, design: .rounded))
                     .fontWeight(.heavy)
                     .foregroundColor(.white)
                     .shadow(radius: 2)
-                Text(data.widgetData[0].scheduleFamily)
-                    .font(.system(.caption, design: .rounded))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-
+                
                 Text(String("\(data.widgetData[0].scheduleType)"))
                     .font(.footnote)
                     .foregroundColor(.white)
-                    .frame(width: 100, height: 30)
                     .lineLimit(3)
+                    
             }
             .padding(.horizontal, 10)
             .frame(width: 300)
@@ -78,7 +74,7 @@ struct WidgetView: View {
 
 struct Provider: TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping(Model)-> Void) {
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Monday", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Monday", startDate: "2020-03-22", scheduleType: "Regular Schedule")])
         completion(loadingData)
     }
     func placeholder(in context: Context) -> Model {
@@ -86,7 +82,7 @@ struct Provider: TimelineProvider {
             // inital snapshot....
             // or loading type content....
             
-        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Monday", startDate: "2020-03-22", scheduleType: "Regular Schedule", scheduleFamily: "RICE")])
+        let loadingData = Model(date: Date(), widgetData: [Schedule(date: Date(), id: "1", summary: "ABCD", dotw: "Monday", startDate: "2020-03-22", scheduleType: "Regular Schedule")])
             
             return loadingData
     }
@@ -112,55 +108,54 @@ struct Provider: TimelineProvider {
                 let summary = item["summary"].stringValue
                 let id = item["id"].stringValue
                 let startDate = item["start"]["date"].string
-                
-                
-                if startDate != nil && summary.hasPrefix("MORE - ") || summary.hasPrefix("RICE - ") {
-                    var dotw: String
-                    
-                    let scheduleComponents = summary.components(separatedBy: " - ")
+                var dotw: String
+
+                if startDate != nil && summary.hasPrefix("Day 1") || summary.hasPrefix("Day 2") {
                     dotw = dayFromDateString(dateString: startDate!)
+                    scheduleData.append(Schedule(date: date, id: id, summary: String(summary.suffix(4)), dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule"))
+                }
+
+            }
+                        
+            for item in items {
+                let summary = item["summary"].stringValue
+                var startDate = item["start"]["date"].string
+                let startDateTime = item["start"]["dateTime"].string
+
+                if startDate == nil && startDateTime != nil {
+                    startDate = String(startDateTime!.prefix(10))
+                }
+
+                if summary.contains("Mass Schedule") || summary.hasPrefix("Academic/ Assembly") || summary.contains("Late Start")  {
+                    var renameDict = [
+                        "Academic/ Assembly Schedule": "Academic/Assembly Schedule",
+                        "Staff & PLC Meeting Schedule": "Late Start Schedule"
+                    ]
                     
-                    if scheduleComponents.count > 2 {
-                        scheduleData.append(Schedule(date: date, id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: scheduleComponents[2], scheduleFamily: scheduleComponents[0]))
+                    if summary.contains("Mass Schedule") {
+                        renameDict[summary] = "Mass Schedule"
                     }
-                    else {
-                        scheduleData.append(Schedule(date: date, id: id, summary: scheduleComponents[1], dotw: dotw, startDate: startDate!, scheduleType: "Regular Schedule", scheduleFamily: scheduleComponents[0]))
+                    
+                    if summary.contains("Late Start") {
+                        renameDict[summary] = "Late Start Schedule"
+                    }
+
+                    for (index, day) in scheduleData.enumerated() {
+                        if day.startDate == String(startDate!) {
+                            scheduleData[index].scheduleType = renameDict[summary] ?? "-"
+                            break
+                        }
                     }
                 }
+                
             }
             
-            DispatchQueue.global().async {
-                let request = syncRequest(API.url+"overrides/")
-                let json = request.0
-                let error = request.1
-                
-                if error != nil {
-                    return
-                }
-                
-                let array = json.array!
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: date)
+            let data = Model(date: date, widgetData: scheduleData)
 
-                for day in array {
-                    let dateStart = day["date"].stringValue
-                    let blockRotation = day["blockRotation"].stringValue
-                    let scheduleType = day["scheduleType"].stringValue
-                    let scheduleFamily = day["scheduleFamily"].stringValue
+            let timeline = Timeline(entries: [data] , policy: .after(nextUpdate!))
+            completion(timeline)
 
-                    if scheduleData[0].startDate == dateStart {
-                        scheduleData[0] = Schedule(date: date, id: "override", summary: blockRotation, dotw: scheduleData[0].dotw, startDate: dateStart, scheduleType: scheduleType, scheduleFamily: scheduleFamily)
-                    }
-                }
-                
-                if let cachedArray = try? PropertyListEncoder().encode(scheduleData) {
-                    UserDefaults.standard.set(cachedArray, forKey: "WidgetData")
-                }
-                
-                let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: date)
-                let data = Model(date: date, widgetData: scheduleData)
-
-                let timeline = Timeline(entries: [data] , policy: .after(nextUpdate!))
-                completion(timeline)
-            }
         })
     }
 }
@@ -222,7 +217,6 @@ struct Schedule: Identifiable, Hashable, TimelineEntry, Codable {
     var dotw: String
     var startDate: String
     var scheduleType: String
-    var scheduleFamily: String
 }
 
 func syncRequest(_ url: String) -> (JSON, Error?) {

@@ -21,11 +21,13 @@ struct UserInfoView: View {
                     HStack {
                         Image(systemName: "person.fill")
                             .resizable()
-                            .frame(width: 15, height: 15)
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(Color.primary)
                         Text("Profile")
-                            .font(.callout)
+                            .font(.system(.title3, design: .rounded))
                             .fontWeight(.bold)
                             .textCase(.none)
+                            .foregroundColor(Color.primary)
                     }
                         
                 ){
@@ -42,25 +44,26 @@ struct UserInfoView: View {
                     HStack {
                         Image(systemName: "info.circle")
                             .resizable()
-                            .frame(width: 15, height: 15)
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(Color.primary)
                         Text("About")
-                            .font(.callout)
+                            .font(.system(.title3, design: .rounded))
                             .fontWeight(.bold)
                             .textCase(.none)
+                            .foregroundColor(Color.primary)
                     }
-                        
                 ){
                     VStack (alignment: .leading){
                         Text("STMC App for iOS")
                             .font(.headline)
                             .fontWeight(.bold)
-                        Text("Developed and coded by Eric Zhang")
+                        Text("Developed and coded by Eric Zhang ('22)")
                             .font(.subheadline)
-                        Text("House crests designed by Charlotte Cho")
+                        Text("House crests designed by Charlotte Cho ('21)")
                             .font(.subheadline)
-                        Text("Calendar API by Philip Stachura")
+                        Text("Calendar API by Philip Stachura ('19)")
                             .font(.subheadline)
-                        Text("Special thanks to STMC staff: Mr. Beadon, Mr. Garland, Ms. Lauang, Mr. Olson")
+                        Text("Special thanks to STMC staff: Mr. Garland, Ms. Lauang, Mr. Olson")
                             .font(.subheadline)
                             .font(.caption)
                             .padding(.top, 5)

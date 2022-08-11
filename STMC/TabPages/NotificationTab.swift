@@ -19,10 +19,18 @@ struct NotificationTab: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                ForEach(notifications.data, id: \.self) { notification in
-                    NotificationEntry(notification: notification)
-                        .environmentObject(notlog)
+                if (notifications.data.count > 0 ) {
+                    ForEach(notifications.data, id: \.self) { notification in
+                        NotificationEntry(notification: notification)
+                            .environmentObject(notlog)
+                    }
                 }
+                else {
+                    Text("Notifications sent by the school will appear here as the school year progresses.")
+                        .padding(50)
+                        .multilineTextAlignment(.center)
+                }
+                
                 
             }
             .background(Color.GR.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
@@ -90,7 +98,9 @@ struct NotificationEntry: View {
 
                             .foregroundColor(Color.white)
                             .contextMenu(ContextMenu(menuItems: {
-                                Button(action: { UIPasteboard.general.setValue(notification.description as Any,forPasteboardType: kUTTypePlainText as String)}, label: {
+                                Button(action: {
+                                    UIPasteboard.general.string = notification.description
+                                    }, label: {
                                     Text("Copy to Clipboard")
                                     Image(systemName: "doc.on.doc")
                                 })
@@ -143,10 +153,12 @@ class NotificationHandler: ObservableObject {
                 let description = notification["contents"]["en"].stringValue
                 let date = self.dateToDateString(unix: notification["queued_at"].intValue)
                 
-                DispatchQueue.main.async {
-                    self.data.append(Notification(id: id, name: title, description: description, date: date, time: time))
+                if (self.checkSchoolYear(unix: notification["queued_at"].intValue)) {
+                    DispatchQueue.main.async {
+                        self.data.append(Notification(id: id, name: title, description: description, date: date, time: time))
+                    }
+
                 }
-                
             }
             
             if let cachedArray = try? PropertyListEncoder().encode(self.data) {
@@ -160,6 +172,16 @@ class NotificationHandler: ObservableObject {
         let realTime = time.dropLast(2)
         
         return realTime + " " + ampm
+    }
+    
+    func checkSchoolYear(unix: Int) -> Bool {
+        let cutoffDate = 1630859194
+        
+        if unix > cutoffDate {
+            return true
+        }
+        return false
+        
     }
     
     func dateToDateString(unix: Int) -> String {
